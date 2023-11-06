@@ -1,0 +1,28 @@
+Metadata-Version: 2.1
+Name: scikit-vector-fields
+Version: 0.0.1
+Summary: A package to perform vector field computations
+Author-email: Sarang Pendharker <sarang@ece.iitkgp.ac.in>
+Project-URL: Homepage, https://github.com/sarang-IITKgp/scikit-vector-fields
+Project-URL: Bug Tracker, https://github.com/sarang-IITKgp/scikit-vector-fields/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Development Status :: 4 - Beta
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# scikit-vector-fields
+
+An open source Python library to perform basics vector field computations. The library is designed for electromagnetic field computations and visualization. However many features can be used for other vector fields in general. 
+
+The library supports the following three major field objects.
+
+### Vector
+
+### Space
+
+### Field
+
+In addition a plotting and visualization module is planned to enable easy visualization of the fields. 

@@ -1,0 +1,12 @@
+LICENSE
+README.md
+pyproject.toml
+src/scikit_vector_fields.egg-info/PKG-INFO
+src/scikit_vector_fields.egg-info/SOURCES.txt
+src/scikit_vector_fields.egg-info/dependency_links.txt
+src/scikit_vector_fields.egg-info/top_level.txt
+src/skvf/__init__.py
+src/skvf/module.py
+src/skvf/plot.py
+src/skvf/vector.py
+tests/test_1.py
