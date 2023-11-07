@@ -1,5 +1,5 @@
 import numpy as np
-
+# from . import 
 
 
 class vector(object):
@@ -106,7 +106,7 @@ class vector(object):
 		return vector(-self.x,-self.y,-self.z)
 	
 class space():
-	def __init__(self,x=None,y=None,z=None,grid=False,x_grid=None,y_grid=None,z_grid=None):
+	def __init__(self,x=None,y=None,z=None,grid=False,x_grid=None,y_grid=None,z_grid=None,text_tag=None):
 		"""check if the data is 1D. If yes, use meshgrid to generate 2D or 3D"""
 		
 		if grid == False:
@@ -161,8 +161,21 @@ class space():
 		return vector(self.x_grid,self.y_grid,self.z_grid)
 		
 class field():
-	def __init__(self,vector,space):
+	def __init__(self,field,space,field_type=None,text_tag=None):
 		"""Check if vector and space are of the same dimensions and size"""
 		print('This is field')
+		if isinstance(field,vector):
+			print('vector field defined')
+			self.field_type = 'vector'
+			self.field = field
+			self.space = space
+		else:
+			print('scalar field defined')
+			self.field_type = 'scalar'
+			self.field = field
+			self.space = space
+			
+			
+			
 		
 		

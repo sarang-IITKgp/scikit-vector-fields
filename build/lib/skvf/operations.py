@@ -2,7 +2,7 @@ import numpy as np
 
 # import skvf as vf
 # from .operations import vector
-from .entities import vector
+import entities.vector as vector
 
 def gradient(scalar_field,space):
     

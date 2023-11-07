@@ -1,8 +1,13 @@
 import numpy as np
-from skvf import entitis as vf
+import skvf as vf
+
+# from skvf import entities as vf
 # import skvf.entities as vf
+
 import matplotlib.pyplot as plt
 import mayavi.mlab as mlab
+
+
 
 # import skvf.module
 
@@ -12,7 +17,7 @@ import mayavi.mlab as mlab
 
 # vf.plot.field_scalar()
 
-vec1 = vf.vector(1+3j,2+2j,3+1j)
+vec1 = vf.entities.vector(1+3j,2+2j,3+1j)
 # print(vec1.elements())
 
 vec2 = vec1.conjugate()
@@ -49,7 +54,7 @@ a = None
 
 print(not isinstance(x,type(None)))
 
-space1 = vf.space(x=x,y=y,z=z)
+space1 = vf.entities.space(x=x,y=y,z=z)
 # space1 = vf.space(x=x,y=y)
 # space1 = vf.space(z=z,x=x,y=y)
 
@@ -59,17 +64,17 @@ space1 = vf.space(x=x,y=y,z=z)
 
 # print(len(np.shape(space1.z_grid)))
 # print(np.shape(space1.z_grid))
-print(space1.dim)
+# print(space1.dim)
 
-print(space1.shape)
-print('-------- Test gradient ----------')
+# print(space1.shape)
+# print('-------- Test gradient ----------')
 
 
 # R = np.sqrt(space1.x_grid**2 + space1.y_grid**2)
 
 # R_vec = vf.vector(space1.x_grid,space1.y_grid,space1.z_grid)
 
-r0_vec = vf.vector(0,0,1)
+r0_vec = vf.entities.vector(0,0,1)
 
 R = space1.R
 
@@ -77,7 +82,7 @@ R_vec = space1.vec()
 
 # V = 1/(2*np.pi*(R_vec-r0_vec).magnitude())
 
-r1_vec = vf.vector(-3,2,0)
+r1_vec = vf.entities.vector(-3,2,0)
 
 # V = V - 1/(2*np.pi*(R_vec-r1_vec).magnitude())
 
@@ -88,9 +93,9 @@ r1_vec = vf.vector(-3,2,0)
 # print('V =', V)
 # print(np.shape(V))
 
-print(space1.x_grid-0.75)
+# print(space1.x_grid-0.75)
 
-def potential_of_charge(q,R_vec=None,space=None,r0=vf.vector(0,0,0)):
+def potential_of_charge(q,R_vec=None,space=None,r0=vf.entities.vector(0,0,0)):
     '''Computes and returns the electric potential of a charge, located at space0'''
     
     if R_vec == None:
@@ -114,16 +119,16 @@ def potential_of_charge(q,R_vec=None,space=None,r0=vf.vector(0,0,0)):
 # E_x = - dV_x/dx_grid
 # E_y = - dV_y/dx_grid 
 
-V1 = potential_of_charge(-1,space = space1,r0 = vf.vector(1,1,0))
-V2 = potential_of_charge(-1,space = space1,r0 = vf.vector(-1,-2,0))
-V3 = potential_of_charge(1,space = space1,r0 = vf.vector(-3,2,0))
+V1 = potential_of_charge(-1,space = space1,r0 = vf.entities.vector(1,1,0))
+V2 = potential_of_charge(-1,space = space1,r0 = vf.entities.vector(-1,-2,0))
+V3 = potential_of_charge(1,space = space1,r0 = vf.entities.vector(-3,2,0))
 
 
 V = V1+V2+V3
 
 
 
-def A_due_to_current(dI_vec,R_vec=None,space=None,r0=vf.vector(0,0,0)):
+def A_due_to_current(dI_vec,R_vec=None,space=None,r0=vf.entities.vector(0,0,0)):
     '''Computes and returns the electric potential of a charge, located at space0'''
     
     if R_vec == None:
@@ -139,9 +144,9 @@ def A_due_to_current(dI_vec,R_vec=None,space=None,r0=vf.vector(0,0,0)):
     Az = vf.MU_0/(4*np.pi*(R_vec-r0).magnitude())*dI_vec.z
 
     
-    return vf.vector(Ax,Ay,Az)
+    return vf.entities.vector(Ax,Ay,Az)
     
-dI_vec = vf.vector(0,0,1)
+dI_vec = vf.entities.vector(0,0,1)
 
 
 # Ax = 1/(4*np.pi*(R_vec-r0_vec).magnitude())*dI_vec.x
@@ -149,23 +154,23 @@ dI_vec = vf.vector(0,0,1)
 # Az = 1/(4*np.pi*(R_vec-r0_vec).magnitude())*dI_vec.z
 
 
-A_vec1 = A_due_to_current(dI_vec=vf.vector(0,0,1),space=space1,r0=vf.vector(0,1,0))
-A_vec2 = A_due_to_current(dI_vec=vf.vector(0,0,1),space=space1,r0=vf.vector(0,-1,0))
+A_vec1 = A_due_to_current(dI_vec=vf.entities.vector(0,1,0),space=space1,r0=vf.entities.vector(0,0.1,0))
+A_vec2 = A_due_to_current(dI_vec=vf.entities.vector(0,0,1),space=space1,r0=vf.entities.vector(0,-0.1,0))
 
 A_vec = A_vec1 + A_vec2 
 
 # A_vec = 1/(4*np.pi*(R_vec-r0_vec).magnitude())*dI_vec
 
-print('----------A_vec---------')
-print(A_vec.z)
-print(np.shape(A_vec.z))
+# # print('----------A_vec---------')
+# # print(A_vec.z)
+# # print(np.shape(A_vec.z))
 
 # A_vec = vf.vector(Ax,Ay,Az)
 
-H_vec = vf.curl(A_vec,space1)
+H_vec = vf.operations.curl(A_vec,space1)
 
 # E_vec = -1*gradient_2d(V,space1)
-E_vec = -vf.gradient(V,space1)
+E_vec = -vf.operations.gradient(V,space1)
 
 # E_x, E_y ,E_z = vf.partial_derivative(V,space1)
 # E_vec_x = vf.partial_derivative(V,space1)
@@ -174,16 +179,17 @@ E_vec = -vf.gradient(V,space1)
 # E_vec = vf.vector(E_x,E_y,E_z)
 
 
+# div_E = vf.operations.divergence(E_vec,space1)
 
-div_E = vf.divergence(E_vec,space1)
+print('-------- Test Field object ---------')
+field_1 = vf.entities.field(V,space1,text_tag='Potential function')
+field_2 = vf.entities.field(E_vec,space1,text_tag='E_1')
 
+# field_1.div()
+dev_E = field_2.div()
 
-
-
-# print('Ex =', E_vec.x)
-# print('Ey =', E_vec.y)
-# print(np.shape(E_vec.x))
-
+A_field = vf.entities.field(A_vec,space1,text_tag='A_total_vec')
+H_field = A_field.curl()
 
 
 # print('x = ',space1.x_grid)
@@ -201,33 +207,34 @@ div_E = vf.divergence(E_vec,space1)
 fig1 = plt.figure('2D plots')
 ax1_f1 = fig1.add_subplot(111)
 
-ax1_f1.contour(space1.x_grid[:,:,1],space1.y_grid[:,:,1],A_vec.z[:,:,1])
+# ax1_f1.contour(space1.x_grid[:,:,1],space1.y_grid[:,:,1],A_vec.z[:,:,1])
 ax1_f1.set_aspect('equal')
 
 # ax1_f1.quiver(space1.x_grid,space1.y_grid,E_x,E_y)
 # ax1_f1.quiver(space1.x_grid[:,:,1],space1.y_grid[:,:,1],A_vec.x[:,:,1],A_vec.y[:,:,1],units='width')
-ax1_f1.quiver(space1.x_grid[:,:,1],space1.y_grid[:,:,1],A_vec.x[:,:,1],A_vec.y[:,:,1],units='width')
+# ax1_f1.quiver(space1.x_grid[:,:,1],space1.y_grid[:,:,1],A_vec.x[:,:,1],A_vec.y[:,:,1],units='width')
 # ax1_f1.streamplot(space1.x_grid,space1.y_grid,H_vec.x,H_vec.y)
 # ax1_f1.streamplot(space1.x_grid,space1.y_grid,H_vec.x,H_vec.y)
-ax1_f1.streamplot(space1.x_grid[:,:,1],space1.y_grid[:,:,1],H_vec.x[:,:,1],H_vec.y[:,:,1])
+# ax1_f1.streamplot(space1.x_grid[:,:,1],space1.y_grid[:,:,1],H_vec.x[:,:,1],H_vec.y[:,:,1])
+ax1_f1.streamplot(H_field.space.x_grid[:,:,1],H_field.space.y_grid[:,:,1],H_field.field.x[:,:,1],H_field.field.y[:,:,1])
 
 
-fig2 = plt.figure('3D plots-div')
-ax1_f2 = fig2.add_subplot(111,projection='3d')
+# fig2 = plt.figure('3D plots-div')
+# ax1_f2 = fig2.add_subplot(111,projection='3d')
 
-# ax1_f2.contour(space1.x_grid,space1.y_grid,div_E)
-ax1_f2.set_aspect('equal')
+# # ax1_f2.contour(space1.x_grid,space1.y_grid,div_E)
+# ax1_f2.set_aspect('equal')
 
-# ax1_f1.quiver(space1.x_grid,space1.y_grid,E_x,E_y)
-# ax1_f1.quiver(space1.x_grid,space1.y_grid,E_vec.x,E_vec.y,units='width')
-# ax1_f2.streamplot(space1.x_grid,space1.y_grid,E_vec.x,E_vec.y)
-ax1_f2.quiver(space1.x_grid,space1.y_grid,space1.z_grid, H_vec.x,H_vec.y,H_vec.z,length=0.1, normalize=True)
-
-
+# # ax1_f1.quiver(space1.x_grid,space1.y_grid,E_x,E_y)
+# # ax1_f1.quiver(space1.x_grid,space1.y_grid,E_vec.x,E_vec.y,units='width')
+# # ax1_f2.streamplot(space1.x_grid,space1.y_grid,E_vec.x,E_vec.y)
+# ax1_f2.quiver(space1.x_grid,space1.y_grid,space1.z_grid, H_vec.x,H_vec.y,H_vec.z,length=0.1, normalize=True)
 
 
 
-### Mayavi plots
+
+
+# ### Mayavi plots
 
 fig2_m = mlab.figure('Mayavi plot')
 mlab.clf(fig2_m)
