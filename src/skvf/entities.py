@@ -13,21 +13,21 @@ class vector(object):
 		self.shape=np.shape(self.x)
 		self.text_tag =text_tag
 		return
-		
+
 	def conjugate(self):
 		'''Take complex conjugates of the vector elements'''
 		x = np.conjugate(self.x)
 		y = np.conjugate(self.y)
 		z = np.conjugate(self.z)
 		return vector(x,y,z)
-		
+	
 	def print(self):
 		print('----------',self.text_tag,'----------')
 		print('x=',self.x)
 		print('y=',self.y)
 		print('z=',self.z)
 		return
-        
+
    # def print(self):
 	   # print(self.x,self.y,self.z)
 	   # return
@@ -45,7 +45,7 @@ class vector(object):
 		
 	def dot(self,other):
 		""" performs dot product. If both the objects are Vector, returns the inner product.
-        If one object is vector and other scalar, then multiply the vector with the scalar"""
+		If one object is vector and other scalar, then multiply the vector with the scalar"""
 		
 		
 		if isinstance(other, vector):
@@ -149,14 +149,18 @@ class space():
 				self.x_grid, self.y_grid, self.z_grid = np.meshgrid(x,y,z)
 				self.shape = (len(self.y),len(self.x),len(self.z))
 				print(self.plane)
-		
 		if grid == True:
+			
 			self.x_grid = x_grid
 			self.y_grid = y_grid
 			self.z_grid = z_grid
-		
+			
+			self.x = x_grid[0,:,0]
+			self.y = y_grid[:,0,0]
+			self.z = z_grid[0,0,:]
+    
 		self.R = np.sqrt(self.x_grid**2 + self.y_grid**2 + self.z_grid**2)
-		print('This is space')
+		print('Space is defined')
 		
 	def vec(self):
 		return vector(self.x_grid,self.y_grid,self.z_grid)
