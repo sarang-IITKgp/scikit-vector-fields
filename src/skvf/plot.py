@@ -58,7 +58,7 @@ def quiver2d(space,vector,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='jet
 		var1 = space.x_grid[:,:,0]
 		var2 = space.y_grid[:,:,0]
 		data1 = vector.x[:,:,0] 
-		data1= vector.y[:,:,0]
+		data2= vector.y[:,:,0]
 		xlabel = 'x'
 		ylabel = 'y'
 	if space.plane == 'y-z':
@@ -66,7 +66,7 @@ def quiver2d(space,vector,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='jet
 		var2 = space.z_grid[:,0,:]
 
 		data1 = vector.y[:,0,:]
-		dtaa2 =vector.z[:,0,:]
+		data2 =vector.z[:,0,:]
 		xlabel = 'y'
 		ylabel = 'z'
 	if space.plane == 'x-z':
@@ -254,7 +254,7 @@ def contourf(space,scalar,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='jet
 		var2 = space.z_grid[:,0,:]
 
 		data = scalar[:,0,:]
-		# dtaa2 =vector.z[:,0,:]
+	
 		xlabel = 'y'
 		ylabel = 'z'
 	if space.plane == 'x-z':
@@ -298,23 +298,22 @@ def contourf(space,scalar,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='jet
 	return ax, Fig
 	 
 	
-def quiver3d(space,vector,cmap='jet',plotting_library='Mayavi',arrow_density = 0.7):
+def quiver3d(space,vector,arrow_density = 0.7):
 	# print('Plotting: '+vector.text_tag)
 	
 	if space.plane == 'x-y-z-3D':
 		pts_y,pts_x,pts_z = space.shape
-		if plotting_library == 'Mayavi':
-			
-			print('Plotting 3D quiver plot of '+vector.text_tag+' using mayavi')
-			fig2_m = mlab.figure('Mayavi plot: '+vector.text_tag)
-			# mlab.clf(fig2_m)
-			
-			# mlab.quiver3d(space.x_grid,space.y_grid,space.z_grid, vector.x,vector.y,vector.z,scale_mode='none',mask_points=int(int(max([pts_x,pts_y,pts_z])*/arrow_density)))
-			mlab.quiver3d(space.x_grid,space.y_grid,space.z_grid, vector.x,vector.y,vector.z,scale_mode='none',mask_points=int(max([pts_x,pts_y,pts_z])*(1-arrow_density)))
+					
+		print('Plotting 3D quiver plot of '+vector.text_tag+' using mayavi')
+		fig2_m = mlab.figure('Mayavi plot: '+vector.text_tag)
+		# mlab.clf(fig2_m)
+		
+		# mlab.quiver3d(space.x_grid,space.y_grid,space.z_grid, vector.x,vector.y,vector.z,scale_mode='none',mask_points=int(int(max([pts_x,pts_y,pts_z])*/arrow_density)))
+		mlab.quiver3d(space.x_grid,space.y_grid,space.z_grid, vector.x,vector.y,vector.z,scale_mode='none',mask_points=int(max([pts_x,pts_y,pts_z])*(1.1-arrow_density)))
 
-			mlab.outline()
-			mlab.orientation_axes()
-			mlab.axes()
+		mlab.outline()
+		mlab.orientation_axes()
+		mlab.axes()
 		
 	else:
 		sys.exit('only 3D vector fields can be plotted using this command.')

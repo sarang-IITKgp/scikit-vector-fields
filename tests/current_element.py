@@ -51,8 +51,8 @@ def A_due_to_current(dI_vec,R_vec=None,space=None,r0=vf.entities.vector(0,0,0)):
 
 
 '''Create space'''
-x = np.linspace(-3,3,100)
-y = np.linspace(-2,2,100)
+x = np.linspace(-3,3,50)
+y = np.linspace(-2,2,40)
 # x = np.linspace(-1,1,50)
 # y = np.linspace(-1,1,40)
 z = np.linspace(-1,1,10)
@@ -79,7 +79,7 @@ R_vec = space1.vec()
     # A_vec = A_vec+A_due_to_current(dI_vec=element['dI'],space=space1,r0=element['r0'])
 
 A_vec1 = A_due_to_current(dI_vec=vf.entities.vector(0,0,1),space=space1,r0=vf.entities.vector(1,0,0))
-A_vec2 = A_due_to_current(dI_vec=vf.entities.vector(0,0,1),space=space1,r0=vf.entities.vector(-1,0,0))
+A_vec2 = A_due_to_current(dI_vec=vf.entities.vector(0,0,-1),space=space1,r0=vf.entities.vector(-1,0,0))
 
 # print('-------- Define Fields ---------')
 
@@ -104,20 +104,31 @@ H_field = A_field.curl()*(1/vf.MU_0)
 J_field = H_field.curl()
 
 
+
 '''Plot commands '''
 ### Plot commands
 
 print('--------------Testing plot module-------------')
 H_field.field.text_tag = 'H_field'
+
+
 loc=0
+
+H_field.plot_quiver2d(plane='x-y',loc=loc)
+H_field.plot_streamplot(plane='x-y',loc=loc)
+J_field.plot_contourf(plane='x-y',loc=loc)
+H_field.plot_quiver3d(1)
+
+
 # ax, Fig = vf.plot.contourf(J_field.space,J_field.field.z,plane='x-y',loc=loc,text_tag='J')#,vmax=1,vmin=-1)#,flag_colorbar=False)
 
+H_field.field.text_tag = 'Same'
 ax, Fig = vf.plot.quiver2d(H_field.space,H_field.field,plane='x-y',loc=loc)
 # ax, Fig = vf.plot.quiver2d(H_field.space,H_field.field,plane='y-z',loc=1.5)
 # ax, Fig = vf.plot.quiver2d(H_field.space,H_field.field,plane='x-z',loc=0.5)
 # print(Fig)
 
-ax, Fig = vf.plot.streamplot(H_field.space,H_field.field,plane='x-y',loc=loc,ax=ax)
+# ax, Fig = vf.plot.streamplot(H_field.space,H_field.field,plane='x-y',loc=loc,ax=ax)
 # ax, Fig = vf.plot.streamplot(H_field.space,H_field.field,plane='y-z',loc=1,ax=ax)
 # ax, Fig = vf.plot.streamplot(H_field.space,H_field.field,plane='x-z',loc=1)
 # ax, Fig = vf.plot.streamplot(H_field.space,H_field.field,plane='x-z',loc=0)
@@ -127,7 +138,9 @@ ax, Fig = vf.plot.streamplot(H_field.space,H_field.field,plane='x-y',loc=loc,ax=
 
 '''Mayavi plot using library'''
 
-vf.plot.quiver3d(H_field.space,H_field.field,arrow_density=0.7)
+# vf.plot.quiver3d(H_field.space,H_field.field,arrow_density=0.7)
+
+
 
 
 # ax.set_aspect('equal')
