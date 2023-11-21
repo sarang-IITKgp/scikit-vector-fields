@@ -109,7 +109,7 @@ class vector(object):
 	def __neg__(self):
 		return vector(-self.x,-self.y,-self.z)
 	
-class space():
+class space(object):
 	def __init__(self,x=None,y=None,z=None,grid=False,x_grid=None,y_grid=None,z_grid=None,text_tag=None):
 		"""check if the data is 1D. If yes, use meshgrid to generate 2D or 3D"""
 		
@@ -168,7 +168,6 @@ class space():
 	def vec(self):
 		return vector(self.x_grid,self.y_grid,self.z_grid)
 		
-		
 
 class field():
 	def __init__(self,field,space,text_tag='text tag',field_type=None):
@@ -185,10 +184,7 @@ class field():
 			self.field_type = 'scalar'
 			print('Scalar field: ' + self.text_tag + ' defined.')
 			
-		# from .operations import gradient
-		# from .operations import divergence
-		# from .operations import curl
-
+		
 		return    
 	def div(self):
 		# print('computing divergence')
@@ -200,12 +196,9 @@ class field():
 			sys.exit('Semantic Error: cannot compute divergence of scalar field. Abort..!!')
 		return field(div_field,self.space,text_tag='div('+self.text_tag+')')
 		
-	# def divergence(self):
-		# if isinstance(self.field,'vector'):
-			# scalar_field = divergence(self.field,self.space)
-			# return field(scalar,self.space)
-		# else:
-		# sys.exit('Field is not vector type. So cannot compute divergence')
+	def divergence(self):
+		return self.div()
+		
 
 	def curl(self):
 		if isinstance(self.field,vector):
@@ -225,24 +218,45 @@ class field():
 			curl_field = gradient(self.field,self.space)
 		return field(curl_field,self.space,text_tag='grad('+self.text_tag+')')
 
+	def gradient(self):
+		return self.grad()
 		
 	def conjugate(self):
 		'''Take complex conjugates of the vector elements'''
-		x = np.conjugate(self.x)
-		y = np.conjugate(self.y)
-		z = np.conjugate(self.z)
+		# x = np.conjugate(self.x)
+		# y = np.conjugate(self.y)
+		# z = np.conjugate(self.z)
 		if self.field_type == 'vector':
 			return field(self.field.conjugate(),self.space,text_tag = '('+self.text_tag+')*')
 		else:
 			return field(np.conjugate(self.field),self.space,text_tag = '('+self.text_tag+')*')
 		
-		
+	def real(self):
+		'''Returns the real components of all the elements'''
+		if self.field_type == 'vector':
+			return field(self.field.real(),self.space,text_tag='Re('+self.text_tag+')')
+		if self.field_type == 'scalar':
+			return field(np.real(self.field),self.space,text_tag='Re('+self.text_tag+')')
+			
+	def imag(self):
+		'''Returns the real components of all the elements'''
+		if self.field_type == 'vector':
+			return field(self.field.imag(),self.space,text_tag='Re('+self.text_tag+')')
+		if self.field_type == 'scalar':
+			return field(np.imag(self.field),self.space,text_tag='Re('+self.text_tag+')')
+			
+
+
 
 	def __add__(self,other):
 		'''Returns the addition of the field type with other'''
-		if isinstance(other,field):
 			
+		if isinstance(other,field):
 			return field(self.field+other.field,self.space,text_tag=self.text_tag+'+'+other.text_tag)
+		elif isinstance(other,float) or isinstance(other,int) or isinstance(other,complex):
+			
+			return field(self.field+other,self.space,text_tag=self.text_tag+'+'+str(other))
+			
 		else:
 			sys.exit('Semantic error: Both objects must be vectors. Abort...!!!')
 			return None
@@ -251,6 +265,12 @@ class field():
 		'''Returns the vector subtraction of self with other'''
 		if isinstance(other,field):
 			return field(self.field-other.field,self.space,text_tag=self.text_tag+'-'+other.text_tag)
+			
+		elif isinstance(other,float) or isinstance(other,int) or isinstance(other,complex):
+			
+			return field(self.field-other,self.space,text_tag=self.text_tag+'-'+str(other))
+			
+			
 		else:
 			sys.exit('Semantic error: Both objects must be vectors. Abort...!!!')
 			return None
@@ -258,7 +278,7 @@ class field():
 	def __mul__(self,other):
 		if isinstance(other,field):
 			return field(self.field*other.field,self.space,text_tag=self.text_tag+'*'+other.text_tag)
-		elif isinstance(other,float) or isinstance(other,int):
+		elif isinstance(other,float) or isinstance(other,int) or isinstance(other,complex):
 			return field(self.field*other,self.space,text_tag=self.text_tag+'*'+str(other))
 		else:
 			sys.exit('Semantic error: Either both objects must be vectors, or one should be scalar. Abort...!!!')
@@ -280,7 +300,7 @@ class field():
 		if isinstance(other,field):
 			return field(self.field^other.field,self.space,text_tag=self.text_tag+'X'+other.text_tag)
 		else:
-			sys.exit('Semantic error: Both objects must be vectors. Abort...!!!')
+			sys.exit('Semantic error: Both objects must be field. Abort...!!!')
 			return None
 
 	def __neg__(self):
@@ -288,34 +308,147 @@ class field():
 		
 	'''plot functions follow'''
 	
-	def plot_quiver2d(self,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='jet'):
+	def plot_quiver2d(self,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='jet',text_tag=None):
+		
+		if text_tag == None:
+			text_tag = self.text_tag
+		
 		print('Plotting 2D quiver for: '+self.text_tag)
-		ax, Fig = plot.quiver2d(self.space,self.field,plane=plane,loc=loc,ax=ax,Fig=Fig,color=color,cmap=cmap)
+		ax, Fig = plot.quiver2d(self.space,self.field,plane=plane,loc=loc,ax=ax,Fig=Fig,color=color,cmap=cmap,text_tag=text_tag)
 		return ax, Fig
 		
-	def plot_streamplot(self,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='jet'):
-		print('Plotting 2D streamplot for: '+self.text_tag)
-		ax, Fig = plot.streamplot(self.space,self.field,plane=plane,loc=loc,ax=ax,Fig=Fig,color=color,cmap=cmap)
+	def plot_streamplot(self,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='jet',text_tag = None):
+		
+		if text_tag == None:
+			text_tag = self.text_tag
+		
+		print('Plotting 2D streamplot for: '+text_tag)
+		ax, Fig = plot.streamplot(self.space,self.field,plane=plane,loc=loc,ax=ax,Fig=Fig,color=color,cmap=cmap,text_tag=text_tag)
 		return ax, Fig
 		
-	def plot_contourf(self,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='jet',text_tag='No text tag defined',color_axis=None,vmax=None,vmin=None,flag_colorbar=True):
+	def plot_contourf(self,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='jet',text_tag=None,color_axis=None,vmax=None,vmin=None,flag_colorbar=True):
+		
+		
+		if text_tag == None:
+			text_tag = self.text_tag
+		
+		
 		if self.field_type == 'scalar':
 			
 			print('Plotting 2D field plot for: '+self.text_tag)
-			ax, Fig = plot.contourf(self.space,self.field,plane=plane,loc=loc,ax=ax,Fig=Fig,color=color,cmap=cmap,text_tag=self.text_tag,color_axis=color_axis,vmax=vmax,vmin=vmin,flag_colorbar=flag_colorbar)
+			ax, Fig = plot.contourf(self.space,self.field,plane=plane,loc=loc,ax=ax,Fig=Fig,color=color,cmap=cmap,text_tag=text_tag,color_axis=color_axis,vmax=vmax,vmin=vmin,flag_colorbar=flag_colorbar)
 			
 		if self.field_type == 'vector':
 			print('Plotting 2D magnitude plot of: '+self.text_tag)
-			ax, Fig = plot.contourf(self.space,self.field.magnitude(),plane=plane,loc=loc,ax=ax,Fig=Fig,color=color,cmap=cmap,text_tag=self.text_tag,color_axis=color_axis,vmax=vmax,vmin=vmin,flag_colorbar=flag_colorbar)
+			ax, Fig = plot.contourf(self.space,self.field.magnitude(),plane=plane,loc=loc,ax=ax,Fig=Fig,color=color,cmap=cmap,text_tag=text_tag,color_axis=color_axis,vmax=vmax,vmin=vmin,flag_colorbar=flag_colorbar)
 
 		return ax, Fig
 		
-	def plot_quiver3d(self,arrow_density = 0.7):
-		print('Plotting 3D quiver plot of: '+self.text_tag)
-		plot.quiver3d(self.space,self.field,arrow_density=arrow_density)
 		
-		return
+	def plot_quiver3d(self,Fig=None,arrow_density = 0.7,text_tag=None,scale_mode='none',colormap='jet'):
+		
+		if text_tag == None:
+			text_tag = self.text_tag
+		
+					
+			
+				
+		print('Plotting 3D quiver plot of: '+text_tag)
+		Fig = plot.quiver3d(self.space,self.field,arrow_density=arrow_density,text_tag=text_tag,scale_mode=scale_mode,Fig=Fig,colormap=colormap)
+		
+		return Fig
+		
+	def plot_volume_slice(self,Fig=None,colormap='jet',text_tag=None,arrow_density=0.7):
+		if text_tag ==  None:
+			text_tag = self.text_tag
+		
+		if self.field_type == 'scalar':
+			Fig = plot.volume_slice_scalar(self.field,Fig=Fig,colormap='jet',text_tag=text_tag)
+		
+		if self.field_type == 'vector':
+			Fig = plot.volume_slice_vector(self.field,Fig=Fig,colormap='jet',text_tag=text_tag,arrow_density=arrow_density)
+		return Fig
 	
+	def plot_contour3d(self,Fig=None,colormap='jet',text_tag=None,contours=None):
+		if text_tag == None:
+			text_tag = self.text_tag
+			
+		if self.field_type == 'scalar':
+			Fig = plot.contour3d(self.space,self.field,Fig=Fig,text_tag=text_tag,colormap='jet',contours=contours)
+		if self.field_type == 'vector':
+			Fig = plot.contour3d(self.space,self.field.magnitude(),Fig=Fig,text_tag=text_tag,colormap='jet',contours=contours)
+			
+		return Fig
+			
+
+
+class source(object):
+	def __init__(self,source,r0,text_tag=None,source_type=None):
+		"""Define source"""
 		
+		if text_tag == None:
+			self.text_tag = 'text tag'
+		else:
+			self.text_tag = text_tag
+		
+		if not isinstance(r0,vector):
+			sys.exit('Position has to be an object of vector class. Abort !!!')
+		
+		if not source.shape == r0.shape:
+			sys.exit('The shape of \'source\'  and position (r0) must be the same. Abort !!!')
+				
+				
+		if isinstance(source,vector):
+			self.source_type = 'vector'
+			self.source = source
+			self.r0 = r0
+			print('Vector source: ' + self.text_tag + ' defined.')
+		else:
+			self.field_type = 'scalar'
+			self.source = source
+			self.r0 = r0
+			print('Scalar field: ' + self.text_tag + ' defined.')
+		return
+		
+		
+	def shift_x(self,shift):
+		self.r0 = vector(self.r0.x+shift,self.r0.y,self.r0.z)
+		return self
+	def shift_y(self,shift):
+		self.r0 = vector(self.r0.x,self.r0.y+shift,self.r0.z)
+		return self
+	def shift_z(self,shift):
+		self.r0 = vector(self.r0.x,self.r0.y,self.r0.z+shift)
+		return self
+	def shift_r(self,r_shift):
+		self.r0 = vector(self.r0.x+r_shift.x,self.r0.y+r_shift.y,self.r0.z+r_shift.z)
+		return self
 
 
+
+def zero_field_vector_like(space):
+	if isinstance(space,type(space)):
+		field_zero = field(zero_vector_like(space),space)
+		print('control here')
+	else: 
+		sys.exit('Zero field can be defined only if the argument is an object of type space. Abort !!!')
+	
+	return field_zero
+
+def zero_field_scalar_like(space):
+	if isinstance(space,type(space)):
+		field_zero = field(np.zeros_like(space.x),space)
+	else: 
+		sys.exit('Zero field can be defined only if the argument is an object of type space. Abort !!!')
+	return field_zero
+
+def zero_vector_like(space):
+	if isinstance(space,type(space)):
+		# print('control here')
+		vector_zero = vector(np.zeros_like(space.x_grid),np.zeros_like(space.y_grid),np.zeros_like(space.z_grid))
+	else:
+		vector_zero = vector(np.zeros_like(space),np.zeros_like(space),np.zeros_like(space))
+	
+	return vector_zero
+		
+		

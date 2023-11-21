@@ -51,11 +51,11 @@ def A_due_to_current(dI_vec,R_vec=None,space=None,r0=vf.entities.vector(0,0,0)):
 
 
 '''Create space'''
-x = np.linspace(-5,5,50)
-y = np.linspace(-5,5,40)
+x = np.linspace(-5,5,100)
+y = np.linspace(-5,5,100)
 # x = np.linspace(-1,1,50)
 # y = np.linspace(-1,1,40)
-z = np.linspace(-5,5,40)
+z = np.linspace(-5,5,100)
 
 
 
@@ -80,35 +80,43 @@ V = V1+V2 #+V3
 
 V_field1 = vf.entities.field(V1,space1,text_tag='V1')
 V_field2 = vf.entities.field(V2,space1,text_tag='V2')
+
 # V_field = vf.entities.field(V,space1,text_tag='V1+V2')
+
 V_field = V_field1+V_field2
 
 E_field = -V_field.grad()
-
-dump_field = E_field^E_field
-print(dump_field.field.print())
 rho_field = E_field.div()
 
 
+ax, Fig = rho_field.plot_contourf(plane='x-y',loc=0)
+# ax, Fig = E_field.plot_streamplot(plane='x-y',loc=0,ax=ax)
+ax, Fig = E_field.plot_quiver2d(plane='x-y',loc=0,ax=ax)
 
+
+
+# Fig_m = V_field.plot_volume_slice()
+# Fig_m = E_field.plot_volume_slice()
+E_field.plot_quiver3d(arrow_density=0.01)
+# mlab.show()
 ### Plot commands
 
-fig1 = plt.figure('2D plots')
-ax1_f1 = fig1.add_subplot(111)
-pts_y, pts_x, pts_z = V_field.space.shape
+# fig1 = plt.figure('2D plots')
+# ax1_f1 = fig1.add_subplot(111)
+# pts_y, pts_x, pts_z = V_field.space.shape
 
-z_index_mid = int(pts_z/2)
+# z_index_mid = int(pts_z/2)
 
-ax1_f1.contourf(rho_field.space.x_grid[:,:,z_index_mid],rho_field.space.y_grid[:,:,z_index_mid],rho_field.field[:,:,z_index_mid])
-ax1_f1.contour(V_field.space.x_grid[:,:,1],V_field.space.y_grid[:,:,1],V_field.field[:,:,1])
-ax1_f1.set_aspect('equal')
+# ax1_f1.contourf(rho_field.space.x_grid[:,:,z_index_mid],rho_field.space.y_grid[:,:,z_index_mid],rho_field.field[:,:,z_index_mid])
+# ax1_f1.contour(V_field.space.x_grid[:,:,1],V_field.space.y_grid[:,:,1],V_field.field[:,:,1])
+# ax1_f1.set_aspect('equal')
 
 
 
-# print(pts_x,pts_y,pts_z)
+# # print(pts_x,pts_y,pts_z)
 
-# ax1_f1.quiver(E_field.space.x_grid[:,:,z_index_mid],E_field.space.y_grid[:,:,z_index_mid],E_field.field.x[:,:,z_index_mid],E_field.field.y[:,:,z_index_mid],units='width')
-ax1_f1.streamplot(E_field.space.x_grid[:,:,z_index_mid],E_field.space.y_grid[:,:,z_index_mid],E_field.field.x[:,:,z_index_mid],E_field.field.y[:,:,z_index_mid])
+# # ax1_f1.quiver(E_field.space.x_grid[:,:,z_index_mid],E_field.space.y_grid[:,:,z_index_mid],E_field.field.x[:,:,z_index_mid],E_field.field.y[:,:,z_index_mid],units='width')
+# ax1_f1.streamplot(E_field.space.x_grid[:,:,z_index_mid],E_field.space.y_grid[:,:,z_index_mid],E_field.field.x[:,:,z_index_mid],E_field.field.y[:,:,z_index_mid])
 
 
 
@@ -129,16 +137,16 @@ ax1_f1.streamplot(E_field.space.x_grid[:,:,z_index_mid],E_field.space.y_grid[:,:
 
 
 
-### Mayavi plots
+# ### Mayavi plots
 
-fig2_m = mlab.figure('Mayavi plot')
-mlab.clf(fig2_m)
-#mlab.quiver3d(x_grid,y_grid,z_grid,F_vector_solution.x,F_vector_solution.y,F_vector_solution.z)
-mlab.quiver3d(E_field.space.x_grid,E_field.space.y_grid,E_field.space.z_grid, E_field.field.x,E_field.field.y,E_field.field.z,scalars=E_field.field.magnitude(),scale_mode='none',mask_points=int(max([pts_x,pts_y,pts_z])/5))
+# fig2_m = mlab.figure('Mayavi plot')
+# mlab.clf(fig2_m)
+# #mlab.quiver3d(x_grid,y_grid,z_grid,F_vector_solution.x,F_vector_solution.y,F_vector_solution.z)
+# mlab.quiver3d(E_field.space.x_grid,E_field.space.y_grid,E_field.space.z_grid, E_field.field.x,E_field.field.y,E_field.field.z,scalars=E_field.field.magnitude(),scale_mode='none',mask_points=int(max([pts_x,pts_y,pts_z])/5))
 
-mlab.outline()
-mlab.orientation_axes()
-mlab.axes()
-# mlab.show()
+# mlab.outline()
+# mlab.orientation_axes()
+# mlab.axes()
+# # mlab.show()
 
 plt.show()
