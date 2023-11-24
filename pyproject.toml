@@ -1,5 +1,5 @@
 [build-system]
-install_requires = ["setuptools>=40.8.0","numpy","matplotlib","mayavi","PyQt5"]
+requires = ["setuptools>=40.8.0","numpy","matplotlib","mayavi","PyQt5"]
 build-backend = "setuptools.build_meta"
 
 
