@@ -352,6 +352,11 @@ def volume_slice_scalar(scalar,Fig=None,colormap='jet',text_tag='scalar field'):
 	mlab.volume_slice(np.transpose(scalar,axes=[1,0,2]),figure=Fig,plane_orientation='z_axes')
 		
 	mlab.contour3d(np.transpose(scalar,axes=[1,0,2]),figure=Fig)
+	
+	mlab.outline()
+	mlab.orientation_axes()
+	mlab.axes()
+	
 	return mlab.gcf()
 
 	
@@ -366,14 +371,26 @@ def volume_slice_vector(vector,Fig=None,colormap='jet',text_tag='vector field',a
 	
 	# mlab.volume_slice(space.x_grid,space.y_grid,space.z_grid,scalar,figure=Fig)#,plane_orientation='x_axes')
 	# mlab.volume_slice(vector,figure=Fig,plane_orientation='x_axes')
-	mlab.volume_slice(np.transpose(vector.x,axes=[1,0,2]), plane_orientation='x_axes',colormap=colormap)
-	# mlab.volume_slice(vector.,figure=Fig,plane_orientation='y_axes')
-	mlab.volume_slice(np.transpose(vector.y,axes=[1,0,2]), plane_orientation='y_axes',colormap=colormap)
-	# mlab.volume_slice(scalar,figure=Fig,plane_orientation='z_axes')
-	mlab.volume_slice(np.transpose(vector.z,axes=[1,0,2]), plane_orientation='z_axes',colormap=colormap)
+	# mlab.volume_slice(np.transpose(vector.x,axes=[1,0,2]), plane_orientation='x_axes',colormap=colormap)
+	scalar_x_axes = np.sqrt(vector.y**2 + vector.z**2)
+	scalar_y_axes = np.sqrt(vector.x**2 + vector.z**2)
+	scalar_z_axes = np.sqrt(vector.x**2 + vector.y**2)
+	
+	mlab.volume_slice(np.transpose(scalar_x_axes,axes=[1,0,2]), plane_orientation='x_axes',colormap=colormap)
+	mlab.volume_slice(np.transpose(scalar_y_axes,axes=[1,0,2]), plane_orientation='y_axes',colormap=colormap)
+	mlab.volume_slice(np.transpose(scalar_z_axes,axes=[1,0,2]), plane_orientation='z_axes',colormap=colormap)
+	# mlab.volume_slice(np.transpose(vector.x,axes=[1,0,2]), plane_orientation='x_axes',colormap=colormap)
+	# # mlab.volume_slice(vector.,figure=Fig,plane_orientation='y_axes')
+	# mlab.volume_slice(np.transpose(vector.y,axes=[1,0,2]), plane_orientation='y_axes',colormap=colormap)
+	# # mlab.volume_slice(scalar,figure=Fig,plane_orientation='z_axes')
+	# mlab.volume_slice(np.transpose(vector.z,axes=[1,0,2]), plane_orientation='z_axes',colormap=colormap)
 	
 	obj = mlab.quiver3d(np.transpose(vector.x,axes=[1,0,2]),np.transpose(vector.y,axes=[1,0,2]),np.transpose(vector.z,axes=[1,0,2]),scale_mode='none',mask_points=int(max([pts_x,pts_y,pts_z])*(1.1-arrow_density)))
-	
+
+	mlab.outline()
+	mlab.orientation_axes()
+	mlab.axes()
+		
 	return mlab.gcf()
 
 def contour3d(space,scalar,Fig=None,colormap='jet',text_tag='field',contours=None):
@@ -386,7 +403,10 @@ def contour3d(space,scalar,Fig=None,colormap='jet',text_tag='field',contours=Non
 	if contours == None:
 		mlab.contour3d(np.transpose(space.x_grid,axes=[1,0,2]),np.transpose(space.y_grid,axes=[1,0,2]),np.transpose(space.z_grid,axes=[1,0,2]),np.transpose(scalar,axes=[1,0,2]),figure=Fig)
 	else:	
-		mlab.contour3d(np.transpose(space.x_grid,axes=[1,0,2]),np.transpose(space.y_grid,axes=[1,0,2]),np.transpose(space.z_grid,axes=[1,0,2]),np.transpose(scalar,axes=[1,0,2]),figure=Fig,contours=[np.max(scalar)*0.1])
+		mlab.contour3d(np.transpose(space.x_grid,axes=[1,0,2]),np.transpose(space.y_grid,axes=[1,0,2]),np.transpose(space.z_grid,axes=[1,0,2]),np.transpose(scalar,axes=[1,0,2]),figure=Fig,contours=contours)
+	mlab.outline()
+	mlab.orientation_axes()
+	mlab.axes()
 	
 	return mlab.gcf()
 	

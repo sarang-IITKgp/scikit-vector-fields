@@ -1,15 +1,6 @@
-import skvf.plot
 import skvf.entities
 import skvf.operations
-# import skvf.vector
-# import skvf.module import vector
-# from skvf.module import field
-# from skvf.module import space
-# from skvf.operations import gradient
-# from skvf.operations import partial_derivative
-# from skvf.operations import divergence
-# from skvf.operations import curl
-
+import skvf.plot
 
 
 __version__ = '00.00.01'

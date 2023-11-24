@@ -285,7 +285,7 @@ Fig_m = H_field.plot_quiver3d(Fig=Fig_m,arrow_density=0.2,colormap='hot')
 # J_field.plot_quiver3d(arrow_density=0.9,scale_mode='scalar')
 # print('===================== hahaha')
 # print(Fig_m)
-J_field.plot_contour3d(Fig=Fig_m,contours=[np.max(J_field.field.magnitude())*0.01])
+J_field.plot_contour3d(Fig=Fig_m,contours=[np.max(J_field.field.magnitude())*0.05])
 # J_field.plot_quiver3d(Fig=Fig_m,scale_mode='vector')#,contours=[np.max(J_field.field.magnitude())*0.01])
 # J_field.plot_contour3d(Fig=Fig_m)#,contours=[np.max(J_field.field.magnitude())*0.1])
 

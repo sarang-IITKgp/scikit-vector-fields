@@ -80,11 +80,11 @@ lambda0 = 2*np.pi/beta
 
 
 '''Create space'''
-x = np.linspace(-3*lambda0,3*lambda0,40)
-y = np.linspace(-3*lambda0,3*lambda0,40)
+x = np.linspace(-3*lambda0,3*lambda0,30)
+y = np.linspace(-3*lambda0,3*lambda0,30)
 # x = np.linspace(-1,1,50)
 # y = np.linspace(-1,1,40)
-z = np.linspace(-3*lambda0,3*lambda0,40)
+z = np.linspace(-3*lambda0,3*lambda0,30)
 
 
 space_xy = vf.entities.space(x=x,y=y)
@@ -101,7 +101,7 @@ R_vec = space1.vec()
 
 r0 = vf.entities.vector(0.25*lambda0,0,0)
 dI_vec = vf.entities.vector(0,0,1)
-phi = np.pi*90/180
+phi = np.pi*45/180
 dI_vec2 = vf.entities.vector(0,0,1*np.exp(1j*phi))
 
 
@@ -112,7 +112,7 @@ dI2 = vf.entities.source(dI_vec2,-r0)
 A_Hertz1 = A_due_to_dI(dI,space=space1,omega=omega)
 A_Hertz2 = A_due_to_dI(dI2,space=space1,omega=omega)
 A_Hertz = A_Hertz1+A_Hertz2
-print(type(A_Hertz))
+# print(type(A_Hertz))
 A_field = vf.entities.field(A_Hertz,space1,text_tag='$vec{A}$')
 
 print(type(1j*omega*vf.EPSILON_0))
@@ -127,17 +127,46 @@ E_field = (1/(1j*omega*vf.EPSILON_0))*H_field.curl()
 
 Pv_field = E_field^H_field.conjugate()
 
-Pv_field.real().plot_volume_slice()
+E_field.real().plot_volume_slice(colormap='hot')
+H_field.real().plot_volume_slice(colormap='hot')
+Pv_field.real().plot_volume_slice(colormap='hot')
 
-fig =plt.figure('2D plot')
-ax = fig.subplots(1,1)
-# ax = fig.subplots(1,3)
-# A_field.real().plot_quiver2d(plane='x-z',ax=ax)
-# E_field.real().plot_quiver2d(plane='x-z',ax=ax)
-print(type(Pv_field.field))
+fig_E =plt.figure('E-field 2D plot')
+ax_E = fig_E.subplots(1,3)
+
+E_field.real().plot_quiver2d(plane='x-y',ax=ax_E[0])
+E_field.real().plot_quiver2d(plane='y-z',ax=ax_E[1])
+E_field.real().plot_quiver2d(plane='x-z',ax=ax_E[2])
+
+
+fig_H =plt.figure('H-field 2D plot')
+ax_H = fig_H.subplots(1,3)
+
+H_field.real().plot_quiver2d(plane='x-y',ax=ax_H[0])
+H_field.real().plot_quiver2d(plane='y-z',ax=ax_H[1])
+H_field.real().plot_quiver2d(plane='x-z',ax=ax_H[2])
+
+fig_P =plt.figure('Poynting vector 2D plot')
+ax_P = fig_P.subplots(1,3)
+
+Pv_field.real().plot_contourf(plane='x-y',ax=ax_P[0])
+Pv_field.real().plot_quiver2d(plane='x-y',ax=ax_P[0])
+# Pv_field.imag().plot_quiver2d(plane='x-y',ax=ax_P[0])
+
+Pv_field.real().plot_contourf(plane='y-z',ax=ax_P[1])
+Pv_field.real().plot_quiver2d(plane='y-z',ax=ax_P[1])
+# Pv_field.imag().plot_quiver2d(plane='y-z',ax=ax_P[1])
+Pv_field.real().plot_contourf(plane='x-z',ax=ax_P[2])
+Pv_field.real().plot_quiver2d(plane='x-z',ax=ax_P[2])
+# Pv_field.imag().plot_quiver2d(plane='x-z',ax=ax_P[2])
+
+
+# Pv_field.plot_contour3d(contours=[np.max(Pv_field.field.real().magnitude())*0.05])
+# Pv_field.real().plot_contour3d()
+
 # Pv_field.real().plot_streamplot(plane='y-z',ax=ax)
-Pv_field.real().plot_contourf(plane='x-y',ax=ax,cmap='jet')
-Pv_field.real().plot_quiver2d(plane='x-y',ax=ax,cmap='hot')
+# Pv_field.real().plot_contourf(plane='x-y',ax=ax,cmap='jet')
+# Pv_field.real().plot_quiver2d(plane='x-y',ax=ax,cmap='hot')
 # Pv_field.real().plot_quiver2d(plane='y-z',ax=ax,cmap='jet')
 # Pv_field.real().plot_quiver2d(plane='y-z',ax=ax,cmap='jet')
 # E_field.real().plot_quiver2d(plane='y-z',ax=ax,cmap='hot')

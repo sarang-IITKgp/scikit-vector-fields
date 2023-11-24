@@ -5,7 +5,14 @@ import numpy as np
 from .entities import vector
 
 def gradient(scalar_field,space):
-    
+    """Gradient function implemented in the library. 
+    Input:
+    scalar_field: scalar 2D or 3D numpy array as input.
+    space: An object of Class space of the entities module.'space' can be 2D or 3D. 
+    The dimensions and shape of scalar_field and space.x, space.y & space.z, should be equal
+    Returns:
+    An object of Class vector of the entities module.
+    numpy gradient is used to compute the gradient."""
     if space.dim == 2:
         if space.plane == 'x-y':
             [dV_y, dV_x ] = np.gradient(scalar_field)
@@ -114,7 +121,7 @@ def partial_derivative(scalar_field,space):
 
 
 def divergence(field_vector,space):
-    """Field function must be an object of vector. Dimensions must be matching with that of space.
+    """Field function must be an object of  vector Class. Dimensions must be matching with that of space.
     Returns a scalar variable."""
     
     

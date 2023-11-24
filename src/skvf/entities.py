@@ -363,10 +363,10 @@ class field():
 			text_tag = self.text_tag
 		
 		if self.field_type == 'scalar':
-			Fig = plot.volume_slice_scalar(self.field,Fig=Fig,colormap='jet',text_tag=text_tag)
+			Fig = plot.volume_slice_scalar(self.field,Fig=Fig,colormap=colormap,text_tag=text_tag)
 		
 		if self.field_type == 'vector':
-			Fig = plot.volume_slice_vector(self.field,Fig=Fig,colormap='jet',text_tag=text_tag,arrow_density=arrow_density)
+			Fig = plot.volume_slice_vector(self.field,Fig=Fig,colormap=colormap,text_tag=text_tag,arrow_density=arrow_density)
 		return Fig
 	
 	def plot_contour3d(self,Fig=None,colormap='jet',text_tag=None,contours=None):
