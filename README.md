@@ -175,6 +175,7 @@ ax, Fig = E_field.plot_streamplot(plane='x-y',loc=0,ax=ax) # Plot the Electric f
 ax, Fig = E_field.plot_quiver2d(plane='x-y',loc=0,ax=ax) #plot the electric field asq quiever plot.
 
 E_field.plot_quiver3d(arrow_density=0.01) # 3D quiver plot of the field using mayavi. 
+plt.show()
 ```
  
 ### Hertz dipole. 
@@ -268,7 +269,7 @@ Pv_field = E_field^H_field.conjugate() # Compute Poynting vector. '^' does the c
 #### following are the commands for plotting.
 E_field.real().plot_volume_slice(colormap='hot')  # Volume slice plot with 3D quiver using Mayavi package. 
 H_field.real().plot_volume_slice(colormap='hot')
-Pv_field.real().plot_volume_slice(colormap='hot',scale_mode='vector')
+Pv_field.real().plot_volume_slice(colormap='hot')
 
 fig_E =plt.figure('E-field 2D plot')
 ax_E = fig_E.subplots(1,3)
