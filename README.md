@@ -84,6 +84,22 @@ This module contains functions to plot the fields. These functions are just to w
 ## Installation
 `pip install scikit-vector-fields`
 
+### Dependencies
+1. numpy
+2. matplotlib
+3. mayavi
+4. PyQt5
+
+If these fail to install with the installation of scikit-vector-fields, please install them manually using the following commands.
+
+```
+pip install numpy
+pip install matplotlib
+pip install mayavi
+pip install PyQt5
+```
+
+
 ## Importing the library in Python. 
 `import skvf as vf`
 
