@@ -62,7 +62,7 @@ This module contains functions to plot the fields. These functions are just to w
 
 ### Electric field of dipoles.
 
-`
+```
 import numpy as np
 import skvf as vf
 
@@ -130,11 +130,11 @@ ax, Fig = E_field.plot_streamplot(plane='x-y',loc=0,ax=ax) # Plot the Electric f
 ax, Fig = E_field.plot_quiver2d(plane='x-y',loc=0,ax=ax) #plot the electric field asq quiever plot.
 
 E_field.plot_quiver3d(arrow_density=0.01) # 3D quiver plot of the field using mayavi. 
-`
+```
  
 ### Hertz dipole. 
 
-`
+```
 import numpy as np
 import skvf as vf
 import matplotlib.pyplot as plt
@@ -254,7 +254,7 @@ Pv_field.real().plot_contourf(plane='x-z',ax=ax_P[2])
 Pv_field.real().plot_quiver2d(plane='x-z',ax=ax_P[2])
 
 plt.show()
-`
+```
 
 
  
