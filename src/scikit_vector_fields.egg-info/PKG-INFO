@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: scikit-vector-fields
-Version: 0.0.2
+Version: 0.0.3
 Summary: A package to perform vector field computations
 Author-email: Sarang Pendharker <sarang@ece.iitkgp.ac.in>
 Project-URL: Homepage, https://github.com/sarang-IITKgp/scikit-vector-fields
@@ -13,6 +13,10 @@ Classifier: Topic :: Scientific/Engineering
 Requires-Python: >=3.7
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Requires-Dist: numpy
+Requires-Dist: matplotlib
+Requires-Dist: mayavi
+Requires-Dist: PyQt5
 
 # scikit-vector-fields
 
