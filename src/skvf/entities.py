@@ -1,5 +1,4 @@
 import numpy as np
-# from . import 
 from . import plot
 import sys as sys
 
@@ -28,10 +27,6 @@ class vector(object):
 		print('z=',self.z)
 		return
 
-   # def print(self):
-	   # print(self.x,self.y,self.z)
-	   # return
-    
 	def elements(self):
 		""" return the elements of the vector to unpack"""
 		return self.x, self.y, self.z
@@ -187,7 +182,6 @@ class field():
 		
 		return    
 	def div(self):
-		# print('computing divergence')
 		if isinstance(self.field,vector):
 			from .operations import divergence
 			print('Computing divergence of '+self.text_tag)
@@ -223,9 +217,6 @@ class field():
 		
 	def conjugate(self):
 		'''Take complex conjugates of the vector elements'''
-		# x = np.conjugate(self.x)
-		# y = np.conjugate(self.y)
-		# z = np.conjugate(self.z)
 		if self.field_type == 'vector':
 			return field(self.field.conjugate(),self.space,text_tag = '('+self.text_tag+')*')
 		else:
@@ -283,7 +274,6 @@ class field():
 		else:
 			sys.exit('Semantic error: Either both objects must be vectors, or one should be scalar. Abort...!!!')
 			return None
-		# return self.dot(other)
 
 	def __rmul__(self,other):
 		return self.__mul__(other)
@@ -444,7 +434,6 @@ def zero_field_scalar_like(space):
 
 def zero_vector_like(space):
 	if isinstance(space,type(space)):
-		# print('control here')
 		vector_zero = vector(np.zeros_like(space.x_grid),np.zeros_like(space.y_grid),np.zeros_like(space.z_grid))
 	else:
 		vector_zero = vector(np.zeros_like(space),np.zeros_like(space),np.zeros_like(space))

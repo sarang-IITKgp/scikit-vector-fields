@@ -28,10 +28,8 @@ def quiver2d(space,vector,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='jet
 			
 			
 	if space.plane == 'x-y-z-3D':
-		# pts_y,pts_x,pts_z = space.shape
 		
 		if plane == 'x-y' or plane == 'y-x':
-			# slice_2d =  
 			index_of_plane = (abs(space.z-loc)).argmin()
 			var1 = space.x_grid[:,:,index_of_plane]
 			var2 = space.y_grid[:,:,index_of_plane]
@@ -123,10 +121,8 @@ def streamplot(space,vector,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='j
 			
 			
 	if space.plane == 'x-y-z-3D':
-		# pts_y,pts_x,pts_z = space.shape
 		
 		if plane == 'x-y' or plane == 'y-x':
-			# slice_2d =  
 			index_of_plane = (abs(space.z-loc)).argmin()
 			var1 = space.x_grid[:,:,index_of_plane]
 			var2 = space.y_grid[:,:,index_of_plane]
@@ -138,10 +134,6 @@ def streamplot(space,vector,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='j
 			
 		elif plane == 'y-z' or plane == 'z-y':
 			index_of_plane = (abs(space.x-loc)).argmin()
-			# var1 = space.y_grid[:,index_of_plane,:]
-			# var2 = space.z_grid[:,index_of_plane,:]
-			# data1 = vector.y[:,index_of_plane,:]
-			# data2 = vector.z[:,index_of_plane,:]
 			var1 = space.y_grid[:,index_of_plane,:].transpose()
 			var2 = space.z_grid[:,index_of_plane,:].transpose()
 			data1 = vector.y[:,index_of_plane,:].transpose()
@@ -152,10 +144,6 @@ def streamplot(space,vector,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='j
 			
 		elif plane == 'x-z' or plane == 'z-x':
 			index_of_plane = (abs(space.x-loc)).argmin()
-			# var1 = space.x_grid[index_of_plane,:,:]
-			# var2 = space.z_grid[index_of_plane,:,:]
-			# data1 = vector.x[index_of_plane,:,:]
-			# data2 = vector.z[index_of_plane,:,:]
 			var1 = space.x_grid[index_of_plane,:,:].transpose()
 			var2 = space.z_grid[index_of_plane,:,:].transpose()
 			data1 = vector.x[index_of_plane,:,:].transpose()
@@ -225,12 +213,10 @@ def contourf(space,scalar,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='jet
 		pts_y,pts_x,pts_z = space.shape
 		
 		if plane == 'x-y' or plane == 'y-x':
-			# slice_2d =  
 			index_of_plane = (abs(space.z-loc)).argmin()
 			var1 = space.x_grid[:,:,index_of_plane]
 			var2 = space.y_grid[:,:,index_of_plane]
 			data = scalar[:,:,index_of_plane]
-			# data2 = vector.y[:,:,index_of_plane]
 			print('x-y plane selected. Location of z = ',space.z[index_of_plane])
 			xlabel = 'x'
 			ylabel = 'y'
@@ -240,7 +226,6 @@ def contourf(space,scalar,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='jet
 			var1 = space.y_grid[:,index_of_plane,:]
 			var2 = space.z_grid[:,index_of_plane,:]
 			data = scalar[:,index_of_plane,:]
-			# data2 = vector.z[:,index_of_plane,:]
 			print('y-z plane selected. Location of x = ',space.x[index_of_plane])
 			xlabel = 'y'
 			ylabel = 'z'
@@ -250,7 +235,6 @@ def contourf(space,scalar,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='jet
 			var1 = space.x_grid[index_of_plane,:,:]
 			var2 = space.z_grid[index_of_plane,:,:]
 			data = scalar[index_of_plane,:,:]
-			# data2 = vector.z[index_of_plane,:,:]
 			print('y-z plane selected. Location of y = ',space.y[index_of_plane])
 			xlabel = 'x'
 			ylabel = 'z'
@@ -264,7 +248,6 @@ def contourf(space,scalar,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='jet
 		var1 = space.x_grid[:,:,0]
 		var2 = space.y_grid[:,:,0]
 		data = scalar[:,:,0] 
-		# data1= vector.y[:,:,0]
 		xlabel = 'x'
 		ylabel = 'y'
 	if space.plane == 'y-z':
@@ -279,16 +262,13 @@ def contourf(space,scalar,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='jet
 		var1 = space.x_grid[0,:,:]
 		var2 = space.z_grid[0,:,:] 
 		data = scalar[:,0,:]
-		# data2 = vector.z[:,0,:]
 		xlabel = 'x'
 		ylabel = 'z'
 		
 
 	print(np.shape(data))
 	print(np.shape(var1))
-	# print(np.shape(data2))
 	print(np.shape(var2))
-	# mag = np.sqrt(data1**2 + data2**2)
 	
 	
     
@@ -317,7 +297,6 @@ def contourf(space,scalar,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='jet
 	 
 	
 def quiver3d(space,vector,arrow_density = 0.7,text_tag=None,scale_mode='none',Fig=None,colormap='jet'):
-	# print('Plotting: '+vector.text_tag)
 	
 	if text_tag == None:
 		text_tag = vector.text_tag
@@ -332,9 +311,7 @@ def quiver3d(space,vector,arrow_density = 0.7,text_tag=None,scale_mode='none',Fi
 		pts_y,pts_x,pts_z = space.shape
 					
 		print('Plotting 3D quiver plot of '+text_tag+' using mayavi')
-		# mlab.clf(fig2_m)
 		
-		# mlab.quiver3d(space.x_grid,space.y_grid,space.z_grid, vector.x,vector.y,vector.z,scale_mode='none',mask_points=int(int(max([pts_x,pts_y,pts_z])*/arrow_density)))
 		mlab.quiver3d(space.x_grid,space.y_grid,space.z_grid, vector.x,vector.y,vector.z,scale_mode=scale_mode,mask_points=int(max([pts_x,pts_y,pts_z])*(1.1-arrow_density)),figure=Fig,colormap=colormap)
 
 		mlab.outline()
@@ -353,7 +330,6 @@ def volume_slice_scalar(scalar,Fig=None,colormap='jet',text_tag='scalar field'):
 	else:
 		mlab.figure(Fig)
 		
-	# mlab.volume_slice(space.x_grid,space.y_grid,space.z_grid,scalar,figure=Fig)#,plane_orientation='x_axes')
 	mlab.volume_slice(np.transpose(scalar,axes=[1,0,2]),figure=Fig,plane_orientation='x_axes')
 	mlab.volume_slice(np.transpose(scalar,axes=[1,0,2]),figure=Fig,plane_orientation='y_axes')
 	mlab.volume_slice(np.transpose(scalar,axes=[1,0,2]),figure=Fig,plane_orientation='z_axes')
@@ -376,9 +352,6 @@ def volume_slice_vector(vector,Fig=None,colormap='jet',text_tag='vector field',a
 	else:
 		mlab.figure(Fig)
 	
-	# mlab.volume_slice(space.x_grid,space.y_grid,space.z_grid,scalar,figure=Fig)#,plane_orientation='x_axes')
-	# mlab.volume_slice(vector,figure=Fig,plane_orientation='x_axes')
-	# mlab.volume_slice(np.transpose(vector.x,axes=[1,0,2]), plane_orientation='x_axes',colormap=colormap)
 	scalar_x_axes = np.sqrt(vector.y**2 + vector.z**2)
 	scalar_y_axes = np.sqrt(vector.x**2 + vector.z**2)
 	scalar_z_axes = np.sqrt(vector.x**2 + vector.y**2)
@@ -386,12 +359,7 @@ def volume_slice_vector(vector,Fig=None,colormap='jet',text_tag='vector field',a
 	mlab.volume_slice(np.transpose(scalar_x_axes,axes=[1,0,2]), plane_orientation='x_axes',colormap=colormap)
 	mlab.volume_slice(np.transpose(scalar_y_axes,axes=[1,0,2]), plane_orientation='y_axes',colormap=colormap)
 	mlab.volume_slice(np.transpose(scalar_z_axes,axes=[1,0,2]), plane_orientation='z_axes',colormap=colormap)
-	# mlab.volume_slice(np.transpose(vector.x,axes=[1,0,2]), plane_orientation='x_axes',colormap=colormap)
-	# # mlab.volume_slice(vector.,figure=Fig,plane_orientation='y_axes')
-	# mlab.volume_slice(np.transpose(vector.y,axes=[1,0,2]), plane_orientation='y_axes',colormap=colormap)
-	# # mlab.volume_slice(scalar,figure=Fig,plane_orientation='z_axes')
-	# mlab.volume_slice(np.transpose(vector.z,axes=[1,0,2]), plane_orientation='z_axes',colormap=colormap)
-	
+
 	obj = mlab.quiver3d(np.transpose(vector.x,axes=[1,0,2]),np.transpose(vector.y,axes=[1,0,2]),np.transpose(vector.z,axes=[1,0,2]),scale_mode='none',mask_points=int(max([pts_x,pts_y,pts_z])*(1.1-arrow_density)))
 
 	mlab.outline()
@@ -405,8 +373,8 @@ def contour3d(space,scalar,Fig=None,colormap='jet',text_tag='field',contours=Non
 		Fig = mlab.figure('Mayavi contour3d plot:'+text_tag)
 	else:
 		mlab.figure(Fig)
-	# mlab.contour3d(space.x_grid,space.y_grid,space.z_grid,scalar,figure=Fig)
-	# mlab.contour3d(space.x_grid,space.y_grid,space.z_grid,scalar,figure=Fig)
+
+
 	if contours == None:
 		mlab.contour3d(np.transpose(space.x_grid,axes=[1,0,2]),np.transpose(space.y_grid,axes=[1,0,2]),np.transpose(space.z_grid,axes=[1,0,2]),np.transpose(scalar,axes=[1,0,2]),figure=Fig)
 	else:	
