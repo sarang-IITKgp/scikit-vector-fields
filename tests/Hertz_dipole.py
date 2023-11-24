@@ -130,6 +130,7 @@ Pv_field = E_field^H_field.conjugate()
 E_field.real().plot_volume_slice(colormap='hot')
 H_field.real().plot_volume_slice(colormap='hot')
 Pv_field.real().plot_volume_slice(colormap='hot')
+# Pv_field.real().plot_quiver3d(colormap='hot')
 
 fig_E =plt.figure('E-field 2D plot')
 ax_E = fig_E.subplots(1,3)
@@ -137,6 +138,16 @@ ax_E = fig_E.subplots(1,3)
 E_field.real().plot_quiver2d(plane='x-y',ax=ax_E[0])
 E_field.real().plot_quiver2d(plane='y-z',ax=ax_E[1])
 E_field.real().plot_quiver2d(plane='x-z',ax=ax_E[2])
+
+fig_EHP =plt.figure('E,H,P-field 2D plot')
+ax_EHP = fig_EHP.subplots(1,3)
+ax_EHP[0].set_title('$ \\vec{E} $ in E-plane ')
+ax_EHP[1].set_title('$ \\vec{H} $ in H-plane ')
+ax_EHP[2].set_title('$ \\vec{P} $ in H-plane ')
+
+E_field.real().plot_quiver2d(plane='x-z',ax=ax_EHP[0])
+H_field.real().plot_quiver2d(plane='x-y',ax=ax_EHP[1])
+Pv_field.real().plot_quiver2d(plane='x-y',ax=ax_EHP[2])
 
 
 fig_H =plt.figure('H-field 2D plot')

@@ -6,6 +6,13 @@ import mayavi.mlab as mlab
 import sys as sys
 
 
+import matplotlib as mpl
+mpl.rc('axes',labelsize=24)
+mpl.rc('font',size=24)
+
+
+
+
 def quiver2d(space,vector,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='jet',text_tag=None):
 	
 	
