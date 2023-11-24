@@ -5,12 +5,29 @@ An open source Python package to perform basics vector field computations. The l
 The first version of this package published on PyPI is intended to be used as an aid in teaching Electromagnetic Engineering course to second year undergraduates at IIT Kharagpur. _*scikit-vector-fields*_ enables easy computation of divergence, curl and gradient of vector and scalar fields. 2D (based on _*matplotlib*_) and 3D (based on _*mayavi*_) visualization of the fields is also supported by the project. The idea is that this package should allow users, who are not masters of coding, to compute and visualize electromagnetic wave phenomena. A typical Pyhton code using this package closely matches with the mathematical equations on vector fields that we derive. 
 
 
-![Radiation from two Hertzian dipoles (antenna array basics) ](/tests/images/E,H,P-field_2D_plot.png "Optional title")
 
 <figure>
   <img src="/tests/images/Hertz_array_H_field.png" alt="">
-  <figcaption>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.</figcaption>
+  <figcaption>Magnetic Field of a Hertzian dipole antenna.</figcaption>
 </figure>
+
+<figure>
+  <img src="/tests/images/E,H,P-field_2D_plot.png" alt="">
+  <figcaption>Radiation from two Hertzian dipoles. Radiation pattern of the antenna array can be seen in the Poynting vector plot.</figcaption>
+</figure>
+
+
+<figure>
+  <img src="/tests/images/Magnetic_field_single_coil.gif" alt="">
+  <figcaption>Magnetic field of a current carrying coil.</figcaption>
+</figure>
+
+<figure>
+  <img src="/tests/images/Magnetic_field_two_coils.gif" alt="">
+  <figcaption>Magnetic field due to two current carrying coils, with currents in opposite direction.</figcaption>
+</figure>
+
+
 
 
 This package does not intend to replace fullwave EM simulators, which also have rich field visualization tools. Neither this package, in the current version, can handle irregular geometries, which are better treated by computational EM tools. In typical commercially available fullwave compuational packages, the mathematical equations are hidden from the users. This is a good thing for many advanced design applications, where an EM engineer can focus on the design and let the software take care of the equations. On the contrary, the hidden nature of underlying equations is not very good at a learning stage. For students, it becomes important that they are able to understand the physical meaning of equations. For exmaple, they should be able to visualize what happens when they take curl of a vector field. This package is developed in hope that the pen-and-paper derivations and expressions can be easily liked to field visualization. 
