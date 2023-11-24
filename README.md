@@ -5,7 +5,7 @@ An open source Python package to perform basics vector field computations. The l
 The first version of this package published on PyPI is intended to be used as an aid in teaching Electromagnetic Engineering course to second year undergraduates at IIT Kharagpur. _*scikit-vector-fields*_ enables easy computation of divergence, curl and gradient of vector and scalar fields. 2D (based on _*matplotlib*_) and 3D (based on _*mayavi*_) visualization of the fields is also supported by the project. The idea is that this package should allow users, who are not masters of coding, to compute and visualize electromagnetic wave phenomena. A typical Pyhton code using this package closely matches with the mathematical equations on vector fields that we derive. 
 
 
-![Radiation from two Hertzian dipoles (antenna array basics) ](/tests/images/E,H,P-field_2D_plot "Optional title"))
+![Radiation from two Hertzian dipoles (antenna array basics) ](/tests/images/E,H,P-field_2D_plot.png "Optional title"))
 
 
 
