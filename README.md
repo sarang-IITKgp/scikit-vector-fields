@@ -7,24 +7,26 @@ The first version of this package published on PyPI is intended to be used as an
 
 
 <figure>
+  <figcaption>Magnetic Field of two Hertzian dipole antenna.</figcaption>
   <img src="/tests/images/Hertz_array_H_field.png" alt="">
-  <figcaption>Magnetic Field of a Hertzian dipole antenna.</figcaption>
 </figure>
 
+--------
 <figure>
-  <img src="/tests/images/E,H,P-field_2D_plot.png" alt="">
   <figcaption>Radiation from two Hertzian dipoles. Radiation pattern of the antenna array can be seen in the Poynting vector plot.</figcaption>
+  <img src="/tests/images/E,H,P-field_2D_plot.png" alt="">
 </figure>
 
-
+----------
 <figure>
-  <img src="/tests/images/Magnetic_field_single_coil.gif" alt="">
   <figcaption>Magnetic field of a current carrying coil.</figcaption>
+  <img src="/tests/images/Magnetic_field_single_coil.gif" alt="">
 </figure>
 
+-----------
 <figure>
-  <img src="/tests/images/Magnetic_field_two_coils.gif" alt="">
   <figcaption>Magnetic field due to two current carrying coils, with currents in opposite direction.</figcaption>
+  <img src="/tests/images/Magnetic_field_two_coils.gif" alt="">
 </figure>
 
 
