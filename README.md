@@ -29,6 +29,7 @@ The first version of this package published on PyPI is intended to be used as an
   <img src="/tests/images/Magnetic_field_two_coils.gif" alt="">
 </figure>
 
+-----------
 
 
 
