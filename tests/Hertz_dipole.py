@@ -3,7 +3,7 @@ import skvf as vf
 
 import copy as copy
 import matplotlib.pyplot as plt
-import mayavi.mlab as mlab
+# import mayavi.mlab as mlab
 
 import sys as sys
 

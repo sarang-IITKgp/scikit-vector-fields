@@ -5,7 +5,7 @@ import skvf as vf
 import matplotlib.pyplot as plt
 import mayavi.mlab as mlab
 
-import sys as sys
+# import sys as sys
 
 
 ########################################################################
@@ -51,11 +51,11 @@ def A_due_to_current(dI_vec,R_vec=None,space=None,r0=vf.entities.vector(0,0,0)):
 
 
 '''Create space'''
-x = np.linspace(-5,5,100)
-y = np.linspace(-5,5,100)
+x = np.linspace(-5,5,50)
+y = np.linspace(-5,5,50)
 # x = np.linspace(-1,1,50)
 # y = np.linspace(-1,1,40)
-z = np.linspace(-5,5,100)
+z = np.linspace(-5,5,50)
 
 
 
