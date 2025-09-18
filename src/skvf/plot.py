@@ -312,7 +312,7 @@ def quiver3d(space,vector,arrow_density = 0.7,text_tag=None,scale_mode='none',Fi
 					
 		print('Plotting 3D quiver plot of '+text_tag+' using mayavi')
 		
-		mlab.quiver3d(space.x_grid,space.y_grid,space.z_grid, vector.x,vector.y,vector.z,scale_mode=scale_mode,mask_points=int(max([pts_x,pts_y,pts_z])*(1.1-arrow_density)),figure=Fig,colormap=colormap)
+		handle_s = mlab.quiver3d(space.x_grid,space.y_grid,space.z_grid, vector.x,vector.y,vector.z,scale_mode=scale_mode,mask_points=int(max([pts_x,pts_y,pts_z])*(1.1-arrow_density)),figure=Fig,colormap=colormap)
 
 		mlab.outline()
 		mlab.orientation_axes()
@@ -320,7 +320,7 @@ def quiver3d(space,vector,arrow_density = 0.7,text_tag=None,scale_mode='none',Fi
 		
 	else:
 		sys.exit('only 3D vector fields can be plotted using this command.')
-	return mlab.gcf()
+	return handle_s, mlab.gcf()
 	
 def volume_slice_scalar(scalar,Fig=None,colormap='jet',text_tag='scalar field'):
 	
@@ -343,7 +343,7 @@ def volume_slice_scalar(scalar,Fig=None,colormap='jet',text_tag='scalar field'):
 	return mlab.gcf()
 
 	
-def volume_slice_vector(vector,Fig=None,colormap='jet',text_tag='vector field',arrow_density = 0.7):
+def volume_slice_vector(vector,Fig=None,colormap='jet',text_tag='vector field',arrow_density = 0.7,normal_plot=False):
 	
 	pts_y,pts_x,pts_z = vector.x.shape
 	
@@ -352,9 +352,19 @@ def volume_slice_vector(vector,Fig=None,colormap='jet',text_tag='vector field',a
 	else:
 		mlab.figure(Fig)
 	
-	scalar_x_axes = np.sqrt(vector.y**2 + vector.z**2)
-	scalar_y_axes = np.sqrt(vector.x**2 + vector.z**2)
-	scalar_z_axes = np.sqrt(vector.x**2 + vector.y**2)
+	
+	
+	
+	if normal_plot == True:
+		scalar_x_axes = vector.x #np.sqrt(vector.y**2 + vector.z**2)
+		scalar_y_axes = vector.y #np.sqrt(vector.x**2 + vector.z**2)
+		scalar_z_axes = vector.z #np.sqrt(vector.x**2 + vector.y**2)
+		print('Control here')
+	else:
+		
+		scalar_x_axes = np.sqrt(vector.y**2 + vector.z**2)
+		scalar_y_axes = np.sqrt(vector.x**2 + vector.z**2)
+		scalar_z_axes = np.sqrt(vector.x**2 + vector.y**2)
 	
 	mlab.volume_slice(np.transpose(scalar_x_axes,axes=[1,0,2]), plane_orientation='x_axes',colormap=colormap)
 	mlab.volume_slice(np.transpose(scalar_y_axes,axes=[1,0,2]), plane_orientation='y_axes',colormap=colormap)
@@ -367,6 +377,7 @@ def volume_slice_vector(vector,Fig=None,colormap='jet',text_tag='vector field',a
 	mlab.axes()
 		
 	return mlab.gcf()
+
 
 def contour3d(space,scalar,Fig=None,colormap='jet',text_tag='field',contours=None):
 	if Fig ==  None:
@@ -385,3 +396,25 @@ def contour3d(space,scalar,Fig=None,colormap='jet',text_tag='field',contours=Non
 	
 	return mlab.gcf()
 	
+	
+
+def plot_mayavi_quiver(F_field,figure,scale_mode='none',arrow_density=0.7,colormap='jet',line_width=2):
+	
+	pts_y,pts_x,pts_z = F_field.space.x_grid.shape
+	
+	sq = mlab.quiver3d(F_field.space.x_grid,F_field.space.y_grid,F_field.space.z_grid, F_field.field.x,F_field.field.y,F_field.field.z,scale_mode=scale_mode,mask_points=int(max([pts_x,pts_y,pts_z])*(1.1-arrow_density)),figure=figure,colormap=colormap,line_width=line_width)
+	return sq
+
+
+def plot_mayavi_points3d(F_field,figure,scale_mode='scalar',point_density=1,colormap='jet',opacity=0.2,vmax=None,vmin=None):
+	if vmax == None:
+		vmax = np.max(F_field.real().field)
+		
+	if vmin == None:
+		vmin = np.min(F_field.real().field)
+		
+	pts_y,pts_x,pts_z = F_field.space.x_grid.shape
+	
+	s = mlab.points3d(F_field.space.x_grid,F_field.space.y_grid,F_field.space.z_grid, F_field.field,scale_mode=scale_mode,mask_points=int(max([pts_x,pts_y,pts_z])*(1.1-point_density)),figure=figure,colormap=colormap,vmax=vmax,vmin=vmin,opacity=opacity,scale_factor=0.05)
+	
+	return s

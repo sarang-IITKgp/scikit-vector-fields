@@ -89,7 +89,7 @@ E_field = -V_field.grad()
 rho_field = E_field.div()
 
 
-ax, Fig = rho_field.plot_contourf(plane='x-y',loc=0)
+ax, Fig = rho_field.plot_contourf(plane='x-z',loc=0)
 # ax, Fig = E_field.plot_streamplot(plane='x-y',loc=0,ax=ax)
 ax, Fig = E_field.plot_quiver2d(plane='x-y',loc=0,ax=ax)
 
@@ -98,6 +98,7 @@ ax, Fig = E_field.plot_quiver2d(plane='x-y',loc=0,ax=ax)
 # Fig_m = V_field.plot_volume_slice()
 # Fig_m = E_field.plot_volume_slice()
 E_field.plot_quiver3d(arrow_density=0.01)
+rho_field.plot_contour3d()
 # mlab.show()
 ### Plot commands
 

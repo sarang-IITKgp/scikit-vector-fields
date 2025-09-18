@@ -99,7 +99,8 @@ R_vec = space1.vec()
 
 
 
-r0 = vf.entities.vector(0.25*lambda0,0,0)
+# r0 = vf.entities.vector(0.25*lambda0,0,0)
+r0 = vf.entities.vector(0*lambda0,0,0)
 dI_vec = vf.entities.vector(0,0,1)
 phi = np.pi*45/180
 dI_vec2 = vf.entities.vector(0,0,1*np.exp(1j*phi))
@@ -111,7 +112,7 @@ dI2 = vf.entities.source(dI_vec2,-r0)
 
 A_Hertz1 = A_due_to_dI(dI,space=space1,omega=omega)
 A_Hertz2 = A_due_to_dI(dI2,space=space1,omega=omega)
-A_Hertz = A_Hertz1+A_Hertz2
+A_Hertz = A_Hertz1#+A_Hertz2
 # print(type(A_Hertz))
 A_field = vf.entities.field(A_Hertz,space1,text_tag='$vec{A}$')
 
@@ -121,6 +122,9 @@ print(1/(1j*omega*vf.EPSILON_0))
 H_field = (1/vf.MU_0)*A_field.curl()
 E_field = (1/(1j*omega*vf.EPSILON_0))*H_field.curl()
 
+Spin = H_field.conjugate()^H_field
+
+# Spin.plot_
 
 # E_field.real().plot_quiver3d()
 # E_field.real().plot_volume_slice()
@@ -129,7 +133,7 @@ Pv_field = E_field^H_field.conjugate()
 
 E_field.real().plot_volume_slice(colormap='hot')
 H_field.real().plot_volume_slice(colormap='hot')
-Pv_field.real().plot_volume_slice(colormap='hot')
+Pv_field.imag().plot_volume_slice(colormap='hot')
 # Pv_field.real().plot_quiver3d(colormap='hot')
 
 fig_E =plt.figure('E-field 2D plot')

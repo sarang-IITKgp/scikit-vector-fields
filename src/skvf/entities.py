@@ -152,10 +152,11 @@ class space(object):
 			self.x_grid = x_grid
 			self.y_grid = y_grid
 			self.z_grid = z_grid
-			
 			self.x = x_grid[0,:,0]
 			self.y = y_grid[:,0,0]
 			self.z = z_grid[0,0,:]
+			self.shape = (len(self.y),len(self.x),len(self.z))
+			self.plane = 'x-y-z-3D'
     
 		self.R = np.sqrt(self.x_grid**2 + self.y_grid**2 + self.z_grid**2)
 		print('Space is defined')
@@ -209,8 +210,8 @@ class field():
 		else: 
 			from .operations import gradient
 			print('Computing gradient of '+self.text_tag)
-			curl_field = gradient(self.field,self.space)
-		return field(curl_field,self.space,text_tag='grad('+self.text_tag+')')
+			grad_field = gradient(self.field,self.space)
+		return field(grad_field,self.space,text_tag='grad('+self.text_tag+')')
 
 	def gradient(self):
 		return self.grad()
@@ -232,12 +233,207 @@ class field():
 	def imag(self):
 		'''Returns the real components of all the elements'''
 		if self.field_type == 'vector':
-			return field(self.field.imag(),self.space,text_tag='Re('+self.text_tag+')')
+			return field(self.field.imag(),self.space,text_tag='Im('+self.text_tag+')')
 		if self.field_type == 'scalar':
-			return field(np.imag(self.field),self.space,text_tag='Re('+self.text_tag+')')
+			return field(np.imag(self.field),self.space,text_tag='Im('+self.text_tag+')')
 			
 
 
+	def return_field_at_point(self,r0):
+		"""Returns the  value of field at (closest to) location r0"""
+		
+		x0 = r0.x
+		y0 = r0.y
+		z0 = r0.z
+		space = self.space
+		
+		index_of_x = (abs(space.x-x0)).argmin()
+		index_of_y = (abs(space.y-y0)).argmin()
+		index_of_z = (abs(space.z-z0)).argmin()
+		
+		x_pt = space.x[index_of_x]
+		y_pt = space.y[index_of_y]
+		z_pt = space.z[index_of_z]
+		
+		
+		if self.field_type=='vector':
+			vector_field = self.field
+			field_value_at_r0 = vector(vector_field.x[index_of_y,index_of_x,index_of_z],vector_field.y[index_of_y,index_of_x,index_of_z],vector_field.z[index_of_y,index_of_x,index_of_z])
+			
+		
+		
+		
+		if self.field_type=='scalar':
+			scalar_field = self.field
+			field_value_at_r0 = scalar_field[index_of_y,index_of_x,index_of_z]
+			
+		
+		r_pt = vector(x_pt,y_pt,z_pt)
+		
+		
+		return field_value_at_r0, r_pt
+
+
+	def return_field_in_plane(self,plane,loc):
+		
+		if plane == 'x-y' or plane == 'y-x':
+			index_of_plane = (abs(self.space.z-loc)).argmin()
+			x_grid_slice = np.array([self.space.x_grid[:,:,index_of_plane]])
+			y_grid_slice= np.array([self.space.y_grid[:,:,index_of_plane]])
+			z_grid_slice= np.array([self.space.z_grid[:,:,index_of_plane]])
+			
+			
+			if self.field_type == 'vector':
+				Field_x = np.array([self.field.x[:,:,index_of_plane]])
+				Field_y = np.array([self.field.y[:,:,index_of_plane]])
+				Field_z = np.array([self.field.z[:,:,index_of_plane]])
+				print('x-y plane sliced. Location of z = ',self.space.z[index_of_plane])
+			if self.field_type =='scalar':
+				Field = np.array([self.field[:,:,index_of_plane]])
+				print('x-y plane sliced. Location of z = ',self.space.z[index_of_plane])
+			
+		elif plane == 'y-z' or plane == 'z-y':
+			index_of_plane = (abs(self.space.x-loc)).argmin()
+			x_grid_slice = np.array([self.space.x_grid[:,index_of_plane,:]])
+			y_grid_slice= np.array([self.space.y_grid[:,index_of_plane,:]])
+			z_grid_slice= np.array([self.space.z_grid[:,index_of_plane,:]])
+			
+			
+			if self.field_type == 'vector':
+				Field_x = np.array([self.field.x[:,index_of_plane,:]])
+				Field_y = np.array([self.field.y[:,index_of_plane,:]])
+				Field_z = np.array([self.field.z[:,index_of_plane,:]])
+				print('y-z plane sliced. Location of x = ',self.space.x[index_of_plane])
+			if self.field_type =='scalar':
+				Field = np.array([self.field[:,index_of_plane,:]])
+				print('y-z plane sliced. Location of x = ',self.space.x[index_of_plane])
+			
+			
+		elif plane == 'x-z' or plane == 'z-x':
+			index_of_plane = (abs(self.space.y-loc)).argmin()
+			x_grid_slice = np.array([self.space.x_grid[index_of_plane,:,:]])
+			y_grid_slice= np.array([self.space.y_grid[index_of_plane,:,:]])
+			z_grid_slice= np.array([self.space.z_grid[index_of_plane,:,:]])
+			if self.field_type == 'vector':
+				Field_x = np.array([self.field.x[index_of_plane,:,:]])
+				Field_y = np.array([self.field.y[index_of_plane,:,:]])
+				Field_z = np.array([self.field.z[index_of_plane,:,:]])
+				print('x-z plane sliced. Location of y = ',self.space.y[index_of_plane])
+			if self.field_type =='scalar':
+				print('x-z plane sliced. Location of y = ',self.space.y[index_of_plane])
+				Field = np.array([self.field[index_of_plane,:,:]])
+			
+			
+		else:
+			sys.exit('x-y, y-z or z-x plane must be defined to get 2D plane from 3D data. Abort...!!!')
+		
+		# space_slice = vf.entities.space(grid=True,x_grid=x_grid_slice,y_grid=y_grid_slice,z_grid=z_grid_slice)
+		# field_slice = vf.entities.vector(Field_x,Field_y,Field_z)
+		
+		
+		if self.field_type == 'vector':
+			field_slice = vector(Field_x,Field_y,Field_z)
+		if self.field_type == 'scalar':
+			field_slice = Field
+			
+			
+		space_slice = space(grid=True,x_grid=x_grid_slice,y_grid=y_grid_slice,z_grid=z_grid_slice)
+		
+		# print(x_grid_slice)
+		# print(y_grid_slice)
+		# print(z_grid_slice)
+		# field_slice = None
+		# space_slice = None
+		
+		return field_slice, space_slice
+
+
+	def return_field_on_line(self,along,x0=0,y0=0,z0=0):
+		
+		
+		
+		if along == 'x' or along == 'X':
+			# index_of_x = (abs(space.x-x0)).argmin()
+			index_of_y = (abs(self.space.y-y0)).argmin()
+			index_of_z = (abs(self.space.z-z0)).argmin()
+			# index_of_plane = (abs(self.space.z-loc)).argmin()
+			x_line = np.array(self.space.x_grid[index_of_y,:,index_of_z])
+			y_pt =  np.array(self.space.y[index_of_y])
+			z_pt =  np.array(self.space.z[index_of_z])
+			
+			if self.field_type == 'vector':
+				Field_x = np.array(self.field.x[index_of_y,:,index_of_z])
+				Field_y = np.array(self.field.y[index_of_y,:,index_of_z])
+				Field_z = np.array(self.field.z[index_of_y,:,index_of_z])
+				print('Line along x extracted at the location of (y0,z0) = ',(y_pt,z_pt))
+				
+			if self.field_type =='scalar':
+				Field = np.arrary(self.field[index_of_y,:,index_of_z])
+				print('Line along x extracted at the location of (y0,z0) = ',(y_pt,z_pt))
+			# print(x_line,y_pt,z_pt)
+			line_space = space(x=x_line,y=[y_pt],z=[z_pt]) 
+			
+		elif along == 'y' or along == 'Y':
+			index_of_x = (abs(self.space.x-x0)).argmin()
+			# index_of_y = (abs(space.y-y0)).argmin()
+			index_of_z = (abs(self.space.z-z0)).argmin()
+			# index_of_plane = (abs(self.space.z-loc)).argmin()
+			# x_line = np.array([self.space.x_grid[index_of_y,:,index_of_z]])
+			x_pt =   np.array(self.space.x[index_of_x])
+			y_line = np.array(self.space.y_grid[:,index_of_x,index_of_z])
+			z_pt =  np.array(self.space.z[index_of_z])
+			
+			if self.field_type == 'vector':
+				Field_x = np.array(self.field.x[:,index_of_x,index_of_z])
+				Field_y = np.array(self.field.y[:,index_of_x,index_of_z])
+				Field_z = np.array(self.field.z[:,index_of_x,index_of_z])
+				print('Line along y extracted at the location of (x0,z0) = ',(x_pt,z_pt))
+				
+			if self.field_type =='scalar':
+				Field = np.arrary([self.field[index_of_y,:,index_of_z]])
+				print('Line along y extracted at the location of (x0,z0) = ',(x_pt,z_pt))
+			
+			line_space = space(x=[x_pt],y=y_line,z=[z_pt]) 
+			
+		elif along == 'z' or along == 'Z':
+			index_of_x = (abs(self.space.x-x0)).argmin()
+			index_of_y = (abs(self.space.y-y0)).argmin()
+			# index_of_z = (abs(space.z-z0)).argmin()
+			# index_of_plane = (abs(self.space.z-loc)).argmin()
+			# x_line = np.array([self.space.x_grid[index_of_y,:,index_of_z]])
+			x_pt =  np.array(self.space.x[index_of_x])
+			# y_line = np.array([self.space.y_grid[:,index_of_x,index_of_z]])
+			y_pt =   np.array(self.space.y[index_of_y])
+			# z_pt= self.space.z[index_of_z]
+			z_line = np.array(self.space.z_grid[index_of_y,index_of_x,:])
+			
+			if self.field_type == 'vector':
+				Field_x = np.array(self.field.x[index_of_y,index_of_x,:])
+				Field_y = np.array(self.field.y[index_of_y,index_of_x,:])
+				Field_z = np.array(self.field.z[index_of_y,index_of_x,:])
+				print('Line along z extracted at the location of (x0,y0) = ',(x_pt,y_pt))
+				
+			if self.field_type =='scalar':
+				Field = np.arrary(self.field[index_of_y,index_of_x,:])
+				print('Line along y extracted at the location of (x0,y0) = ',(x_pt,y_pt))
+			
+			line_space = space(x=[x_pt],y=[y_pt],z=z_line) 
+			
+		else:
+			sys.exit('x-y, y-z or z-x plane must be defined to get 2D plane from 3D data. Abort...!!!')
+		
+		# space_slice = vf.entities.space(grid=True,x_grid=x_grid_slice,y_grid=y_grid_slice,z_grid=z_grid_slice)
+		# field_slice = vf.entities.vector(Field_x,Field_y,Field_z)
+		field_slice = vector(Field_x,Field_y,Field_z)
+		# space_slice = space(x=x_grid_slice,y_grid=y_grid_slice,z_grid=z_grid_slice)
+		
+		# print(x_grid_slice)
+		# print(y_grid_slice)
+		# print(z_grid_slice)
+		# field_slice = None
+		# space_slice = None
+		
+		return field_slice, line_space
 
 	def __add__(self,other):
 		'''Returns the addition of the field type with other'''
@@ -335,6 +531,25 @@ class field():
 		return ax, Fig
 		
 		
+	def plot_1d_plot(self,along,x0=0,y0=0,z0=0,ax=None,Fig=None,color=True,cmap='jet',text_tag=None,color_axis=None,vmax=None,vmin=None,flag_colorbar=True):
+		
+		
+		if text_tag == None:
+			text_tag = self.text_tag
+		
+		
+		if self.field_type == 'scalar':
+			
+			print('Plotting 2D field plot for: '+self.text_tag)
+			ax, Fig = plot.contourf(self.space,self.field,plane=plane,loc=loc,ax=ax,Fig=Fig,color=color,cmap=cmap,text_tag=text_tag,color_axis=color_axis,vmax=vmax,vmin=vmin,flag_colorbar=flag_colorbar)
+			
+		if self.field_type == 'vector':
+			print('Plotting 2D magnitude plot of: '+self.text_tag)
+			ax, Fig = plot.contourf(self.space,self.field.magnitude(),plane=plane,loc=loc,ax=ax,Fig=Fig,color=color,cmap=cmap,text_tag=text_tag,color_axis=color_axis,vmax=vmax,vmin=vmin,flag_colorbar=flag_colorbar)
+
+		return ax, Fig
+		
+		
 	def plot_quiver3d(self,Fig=None,arrow_density = 0.7,text_tag=None,scale_mode='none',colormap='jet'):
 		
 		if text_tag == None:
@@ -344,11 +559,11 @@ class field():
 			
 				
 		print('Plotting 3D quiver plot of: '+text_tag)
-		Fig = plot.quiver3d(self.space,self.field,arrow_density=arrow_density,text_tag=text_tag,scale_mode=scale_mode,Fig=Fig,colormap=colormap)
+		handle_s, Fig = plot.quiver3d(self.space,self.field,arrow_density=arrow_density,text_tag=text_tag,scale_mode=scale_mode,Fig=Fig,colormap=colormap)
 		
-		return Fig
+		return handle_s, Fig
 		
-	def plot_volume_slice(self,Fig=None,colormap='jet',text_tag=None,arrow_density=0.7):
+	def plot_volume_slice(self,Fig=None,colormap='jet',text_tag=None,arrow_density=0.7,normal_plot=False):
 		if text_tag ==  None:
 			text_tag = self.text_tag
 		
@@ -356,7 +571,7 @@ class field():
 			Fig = plot.volume_slice_scalar(self.field,Fig=Fig,colormap=colormap,text_tag=text_tag)
 		
 		if self.field_type == 'vector':
-			Fig = plot.volume_slice_vector(self.field,Fig=Fig,colormap=colormap,text_tag=text_tag,arrow_density=arrow_density)
+			Fig = plot.volume_slice_vector(self.field,Fig=Fig,colormap=colormap,text_tag=text_tag,arrow_density=arrow_density,normal_plot=normal_plot)
 		return Fig
 	
 	def plot_contour3d(self,Fig=None,colormap='jet',text_tag=None,contours=None):
