@@ -434,6 +434,64 @@ class field():
 		# space_slice = None
 		
 		return field_slice, line_space
+		
+	def magnitude(self):
+		return field(self.field.magnitude(),self.space,text_tag = 'mag('+self.text_tag+')')
+	
+	
+	def normalize(self):
+		""" Normalize the vector field with the maxmimum magnitude over entire space."""
+		text_tag = self.text_tag
+		if self.field_type == 'scalar':
+			print('Normalizing the scalar field in',self.text_tag)
+			F_max = max(np.abs(self.field))
+		if self.field_type == 'vector':
+			print('Normalizing the vector field in',self.text_tag)
+			F_max = np.abs(self.field.magnitude()).max()
+		Field_norm = self/F_max
+		Field_norm.text_tag = 'normalized('+text_tag+')'
+		return Field_norm
+
+	def normalize_pointwise_by(self,scalar_field):
+		'''Normalize i.e. divide the Field values point-wise with the values contained in scalar_field. 'scalar_field should either of a field of type scalar, or ndarray matching the dimensions of '''
+		
+		if isinstance(scalar_field,field):
+			if scalar_field.field_type == 'vector':
+				sys.exit('Semantic error: Abort...!!! The field with which you want point-wise normalization must be scalar field.')
+			if scalar_field.field_type == 'scalar':
+				norm_factor = scalar_field.field
+				text_norm = scalar_field.text_tag
+		else:
+			norm_factor = scalar_field
+			text_norm = 'ndarray'
+		
+		if self.field_type =='scalar':
+			Field_norm = field(self.field/norm_factor,self.space,text_tag = 'Ptwise-norm('+self.text_tag+') by '+text_norm)
+		elif self.field_type == 'vector':
+			Field_norm_vec_x = self.field.x/norm_factor 
+			Field_norm_vec_y = self.field.y/norm_factor 
+			Field_norm_vec_z = self.field.z/norm_factor 
+			
+			Field_norm_vec = vector(Field_norm_vec_x,Field_norm_vec_y,Field_norm_vec_z)
+			
+			Field_norm = field(Field_norm_vec,self.space,text_tag = 'Ptwise-norm('+self.text_tag+') by '+text_norm)
+			
+		return Field_norm
+
+
+
+	def TH_at_t(self,omega,t):
+		'''Return the field after harmonically evolving for 't' time with 'omega' frequency'''
+		Fx = self.field.x*np.exp(1j*omega*t)
+		Fy = self.field.y*np.exp(1j*omega*t)
+		Fz = self.field.z*np.exp(1j*omega*t)
+
+		F_vec_t = vector(Fx,Fy,Fz)
+
+		return field(F_vec_t,self.space,text_tag=self.text_tag+'*exp(j '+str(omega)+'*'+str(t)+')')
+
+
+
 
 	def __add__(self,other):
 		'''Returns the addition of the field type with other'''
@@ -445,7 +503,7 @@ class field():
 			return field(self.field+other,self.space,text_tag=self.text_tag+'+'+str(other))
 			
 		else:
-			sys.exit('Semantic error: Both objects must be vectors. Abort...!!!')
+			sys.exit('Semantic error: Both objects must be fields of same type or one should be a scalar value. Abort...!!!')
 			return None
 
 	def __sub__(self,other):

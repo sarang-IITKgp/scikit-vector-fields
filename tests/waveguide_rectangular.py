@@ -125,14 +125,72 @@ n = 0 # mode number along 'b'
 h = np.sqrt( (m*np.pi/a)**2  + (n*np.pi/b)**2 )
 omega_c = h/(np.sqrt(epsilon_r*vf.EPSILON_0*vf.MU_0)) # omega_c is in radians/s
 
-omega = 1.5*omega_c
+omega = 3.1*omega_c
 
 E_field, H_field = TE_mode(m=m,n=n,omega=omega,space=space1,a=a,b=b)
 
+Spin_H_comp = H_field^H_field.conjugate()
 
 Spin_H = (H_field^H_field.conjugate()).imag()
 
 Spin_H.plot_quiver3d()
+
+def normalize(Field):
+	if Field.field_type == 'scalar':
+		print('Normalizing the scalar field in',Field.text_tag)
+		F_max = max(np.abs(Field.field))
+	if Field.field_type == 'vector':
+		print('Normalizing the vector field in',Field.text_tag)
+		# F_max_1 = max(np.abs(Field.field.magnitude()))
+		# print(np.abs(Field.field.magnitude()))
+		# print(np.abs(Field.field.magnitude().max()))
+		F_max = np.abs(Field.field.magnitude()).max()
+		""" Normalize the vector field with the maxmimum of all components """
+	return Field/F_max
+
+
+def normalize_pointwise_by(Field,scalar_field):
+	'''Normalize i.e. divide the Field values point-wise with the values contained in scalar_field. 'scalar_field should either of a field of type scalar, or ndarray matching the dimensions of '''
+	
+	if isinstance(scalar_field,vf.entities.field):
+		if scalar_field.field_type == 'vector':
+			sys.exit('Semantic error: Abort...!!! The field with which you want point-wise normalization must be scalar field.')
+		if scalar_field.field_type == 'scalar':
+			norm_factor = scalar_field.field
+			text_norm = scalar_field.text_tag
+	else:
+		norm_factor = scalar_field
+		text_norm = 'ndarray'
+	
+	if Field.field_type =='scalar':
+		Field_norm = vf.field(Field.field/norm_factor,Field.space,text_tag = 'Ptwise-norm('+self.text_tag+') by '+text_norm)
+	elif Field.field_type == 'vector':
+		Field_norm_vec_x = Field.field.x/norm_factor 
+		Field_norm_vec_y = Field.field.y/norm_factor 
+		Field_norm_vec_z = Field.field.z/norm_factor 
+		
+		Field_norm_vec = vf.entities.vector(Field_norm_vec_x,Field_norm_vec_y,Field_norm_vec_z)
+		
+		Field_norm = vf.entities.field(Field_norm_vec,Field.space,text_tag = 'Ptwise-norm('+Field.text_tag+') by '+text_norm)
+		
+	return Field_norm
+
+# print(Spin_H.text_tag)
+# Spin_H = normalize(Spin_H)
+
+
+# print(Spin_H.text_tag)
+Spin_H_norm = Spin_H.normalize()
+# print(Spin_H.text_tag)
+
+
+S0 = np.abs(H_field.field.x)**2 + np.abs(H_field.field.z)**2
+S0_field = vf.entities.field(S0,space1)
+
+# Spin_H_norm = normalize(Spin_H)
+
+# Spin_H_pt_wise_norm = normalize_pointwise_by(Spin_H,S0_field)
+Spin_H_pt_wise_norm = Spin_H.normalize_pointwise_by(S0_field)
 
 
 '''Field at a point '''
@@ -238,7 +296,8 @@ H_field.real().plot_volume_slice(normal_plot=True)
 
 
 
-
+H_field_t = H_field.TH_at_t(omega,0.5*2*np.pi/omega)
+H_field_t.real().plot_volume_slice(normal_plot=True)
 
 
 
@@ -249,7 +308,7 @@ H_field.real().plot_volume_slice(normal_plot=True)
 
 
 fig_2d = plt.figure('Waveguide')
-ax_wg = fig_2d.subplots(2,1)
+ax_wg = fig_2d.subplots(1,1)
 
 
 # E_field_line1, line_space1 = E_field.return_field_on_line(along='x',y0=b/2,z0=0.25*b)
@@ -257,6 +316,8 @@ ax_wg = fig_2d.subplots(2,1)
 # E_field_line3, line_space3 = E_field.return_field_on_line(along='z',x0=a/2,y0=0.5*b)
 
 Spin_H_along_x,line_space1 = Spin_H.return_field_on_line(along='x',y0=b/2,z0=0.25*b)
+Spin_H_along_x_norm,line_space1 = Spin_H_norm.return_field_on_line(along='x',y0=b/2,z0=0.25*b)
+Spin_H_along_x_pt_wise_norm,line_space1 = Spin_H_pt_wise_norm.return_field_on_line(along='x',y0=b/2,z0=0.25*b)
 
 
 
@@ -276,9 +337,12 @@ Spin_H_along_x,line_space1 = Spin_H.return_field_on_line(along='x',y0=b/2,z0=0.2
 
 # fig_2d_E_xy = E_field.real().plot_quiver2d(plane='x-y',loc=0.2,ax=ax_wg[0])
 # fig_2d_E_yz = E_field.real().plot_quiver2d(plane='y-z',loc=a/2,ax=ax_wg[1])
-fig_2d_H_xz = H_field.real().plot_quiver2d(plane='y-z',loc=b/2,ax=ax_wg[0])
-fig_1D_Sh_y = ax_wg[1].plot(line_space1.x,np.real(Spin_H_along_x.y),linewidth='3')
-
+# fig_2d_H_xz = H_field.real().plot_quiver2d(plane='y-z',loc=b/2,ax=ax_wg[0])
+fig_1D_Sh_y = ax_wg.plot(line_space1.x,np.real(Spin_H_along_x.y),linewidth='3',label='S3')
+fig_1D_Sh_y = ax_wg.plot(line_space1.x,np.real(Spin_H_along_x_norm.y),linewidth='3',label='S3-norm')
+fig_1D_Sh_y = ax_wg.plot(line_space1.x,np.real(Spin_H_along_x_pt_wise_norm.y),linewidth='3',label='S3/S0')
+ax_wg.legend()
+ax_wg.grid(1)
 
 
 
