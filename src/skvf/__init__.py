@@ -1,9 +1,10 @@
 import skvf.entities
 import skvf.operations
 import skvf.plot
+import skvf.data
 
 
-__version__ = '00.00.01'
+__version__ = '1.0.3'
 
 
 EPSILON_0 = 8.8541878128e-12 # F/m

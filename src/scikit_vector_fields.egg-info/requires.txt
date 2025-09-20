@@ -2,3 +2,5 @@ numpy
 matplotlib
 mayavi
 PyQt5
+pandas
+regex

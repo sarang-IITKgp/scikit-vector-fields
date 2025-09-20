@@ -125,7 +125,7 @@ n = 0 # mode number along 'b'
 h = np.sqrt( (m*np.pi/a)**2  + (n*np.pi/b)**2 )
 omega_c = h/(np.sqrt(epsilon_r*vf.EPSILON_0*vf.MU_0)) # omega_c is in radians/s
 
-omega = 3.1*omega_c
+omega = 1.5*omega_c
 
 E_field, H_field = TE_mode(m=m,n=n,omega=omega,space=space1,a=a,b=b)
 
@@ -135,48 +135,7 @@ Spin_H = (H_field^H_field.conjugate()).imag()
 
 Spin_H.plot_quiver3d()
 
-def normalize(Field):
-	if Field.field_type == 'scalar':
-		print('Normalizing the scalar field in',Field.text_tag)
-		F_max = max(np.abs(Field.field))
-	if Field.field_type == 'vector':
-		print('Normalizing the vector field in',Field.text_tag)
-		# F_max_1 = max(np.abs(Field.field.magnitude()))
-		# print(np.abs(Field.field.magnitude()))
-		# print(np.abs(Field.field.magnitude().max()))
-		F_max = np.abs(Field.field.magnitude()).max()
-		""" Normalize the vector field with the maxmimum of all components """
-	return Field/F_max
 
-
-def normalize_pointwise_by(Field,scalar_field):
-	'''Normalize i.e. divide the Field values point-wise with the values contained in scalar_field. 'scalar_field should either of a field of type scalar, or ndarray matching the dimensions of '''
-	
-	if isinstance(scalar_field,vf.entities.field):
-		if scalar_field.field_type == 'vector':
-			sys.exit('Semantic error: Abort...!!! The field with which you want point-wise normalization must be scalar field.')
-		if scalar_field.field_type == 'scalar':
-			norm_factor = scalar_field.field
-			text_norm = scalar_field.text_tag
-	else:
-		norm_factor = scalar_field
-		text_norm = 'ndarray'
-	
-	if Field.field_type =='scalar':
-		Field_norm = vf.field(Field.field/norm_factor,Field.space,text_tag = 'Ptwise-norm('+self.text_tag+') by '+text_norm)
-	elif Field.field_type == 'vector':
-		Field_norm_vec_x = Field.field.x/norm_factor 
-		Field_norm_vec_y = Field.field.y/norm_factor 
-		Field_norm_vec_z = Field.field.z/norm_factor 
-		
-		Field_norm_vec = vf.entities.vector(Field_norm_vec_x,Field_norm_vec_y,Field_norm_vec_z)
-		
-		Field_norm = vf.entities.field(Field_norm_vec,Field.space,text_tag = 'Ptwise-norm('+Field.text_tag+') by '+text_norm)
-		
-	return Field_norm
-
-# print(Spin_H.text_tag)
-# Spin_H = normalize(Spin_H)
 
 
 # print(Spin_H.text_tag)
@@ -213,12 +172,6 @@ delta_a = 0.01*a
 
 
 
-
-# E_vec_x_a, plane_x_a = return_field_in_plane(E_field,plane='y-z',loc=a-delta_a)
-# E_vec_x_0, plane_x_0 = return_field_in_plane(E_field,plane='y-z',loc=delta_a)
-
-# H_vec_x_a, plane_x_a = return_field_in_plane(H_field,plane='y-z',loc=a-delta_a)
-# H_vec_x_0, plane_x_0 = return_field_in_plane(H_field,plane='y-z',loc=delta_a)
 
 E_vec_x_a, plane_x_a = E_field.return_field_in_plane(plane='y-z',loc=a-delta_a)
 E_vec_x_0, plane_x_0 = E_field.return_field_in_plane(plane='y-z',loc=delta_a)
@@ -372,12 +325,6 @@ s_J_x_0 = vf.plot.plot_mayavi_quiver(J_field_x_0.real(),figure=Fig_ani,scale_mod
 s_J_y_b = vf.plot.plot_mayavi_quiver(J_field_y_b.real(),figure=Fig_ani,scale_mode='vector',colormap='winter',arrow_density=1)
 s_J_y_0 = vf.plot.plot_mayavi_quiver(J_field_y_0.real(),figure=Fig_ani,scale_mode='vector',colormap='winter',arrow_density=1)
 
-# s_h_rho_x_a_ani = plot_mayavi_charge(rho_field_x_a.real(),figure=Fig_ani,opacity=0.2)
-# s_h_rho_x_0_ani= plot_mayavi_charge(rho_field_x_0.real(),figure=Fig_ani,opacity=0.2)
-
-# s_h_rho_y_b_ani = plot_mayavi_charge(rho_field_y_b.real(),figure=Fig_ani,opacity=0.2)
-# s_h_rho_y_0_ani = plot_mayavi_charge(rho_field_y_0.real(),figure=Fig_ani,opacity=0.2)
-
 rho_max = np.max([np.max(rho_field_x_0.real().field), np.max(rho_field_y_0.real().field)])
 # rho_min = np.max([np.min(rho_field_x_0.real().field), np.min(rho_field_y_0.real().field)])
 rho_min = -rho_max
@@ -418,7 +365,8 @@ def anim():
     while 1:
         
         # F_field_t = fun_F_Field_t(F_field,dt*count,omega)
-        F_field2_t = fun_F_Field_t(F_field2,dt*count,omega)
+        # F_field2_t = fun_F_Field_t(F_field2,dt*count,omega)
+        F_field2_t = F_field2.TH_at_t(omega,dt*count)
         
         # s_field_count = fun_update_ani_quiver_data(s_field,F_field_t)
         
@@ -428,16 +376,16 @@ def anim():
         # Fz_t_count = F_field_t.field.z
         
         
-        J_field_x_0_t = fun_F_Field_t(J_field_x_0,dt*count,omega)
-        J_field_x_a_t = fun_F_Field_t(J_field_x_a,dt*count,omega)
-        J_field_y_0_t = fun_F_Field_t(J_field_y_0,dt*count,omega)
-        J_field_y_b_t = fun_F_Field_t(J_field_y_b,dt*count,omega)
+        J_field_x_0_t = J_field_x_0.TH_at_t(omega,dt*count)
+        J_field_x_a_t = J_field_x_a.TH_at_t(omega,dt*count)
+        J_field_y_0_t = J_field_y_0.TH_at_t(omega,dt*count)
+        J_field_y_b_t = J_field_y_b.TH_at_t(omega,dt*count)
         
         
-        rho_field_x_0_t = fun_F_Field_scalar_t(rho_field_x_0,dt*count,omega)
-        rho_field_x_a_t = fun_F_Field_scalar_t(rho_field_x_a,dt*count,omega)
-        rho_field_y_0_t = fun_F_Field_scalar_t(rho_field_y_0,dt*count,omega)
-        rho_field_y_b_t = fun_F_Field_scalar_t(rho_field_y_b,dt*count,omega)
+        rho_field_x_0_t = rho_field_x_0.TH_at_t(omega,dt*count)
+        rho_field_x_a_t = rho_field_x_a.TH_at_t(omega,dt*count)
+        rho_field_y_0_t = rho_field_y_0.TH_at_t(omega,dt*count)
+        rho_field_y_b_t = rho_field_y_b.TH_at_t(omega,dt*count)
         
      
         
@@ -492,7 +440,7 @@ def anim():
         yield
 
 
-# anim()
+anim()
 
 
 # mlab.axes()

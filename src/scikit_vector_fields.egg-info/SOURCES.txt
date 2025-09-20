@@ -7,6 +7,7 @@ src/scikit_vector_fields.egg-info/dependency_links.txt
 src/scikit_vector_fields.egg-info/requires.txt
 src/scikit_vector_fields.egg-info/top_level.txt
 src/skvf/__init__.py
+src/skvf/data.py
 src/skvf/entities.py
 src/skvf/operations.py
 src/skvf/plot.py

@@ -166,11 +166,12 @@ class space(object):
 		
 
 class field():
-	def __init__(self,field,space,text_tag='text tag',field_type=None):
+	def __init__(self,field,space,text_tag='text tag',field_type=None,TH_omega=None):
 		"""Check if vector and space are of the same dimensions and size"""
 		print('Defining field')
 		self.space = space
 		self.text_tag = text_tag
+		self.TH_omega = TH_omega
 		if isinstance(field,vector):
 			self.field = field
 			self.field_type = 'vector'
@@ -482,13 +483,18 @@ class field():
 
 	def TH_at_t(self,omega,t):
 		'''Return the field after harmonically evolving for 't' time with 'omega' frequency'''
-		Fx = self.field.x*np.exp(1j*omega*t)
-		Fy = self.field.y*np.exp(1j*omega*t)
-		Fz = self.field.z*np.exp(1j*omega*t)
+		
+		if self.field_type == 'vector':
+			Fx = self.field.x*np.exp(1j*omega*t)
+			Fy = self.field.y*np.exp(1j*omega*t)
+			Fz = self.field.z*np.exp(1j*omega*t)
 
-		F_vec_t = vector(Fx,Fy,Fz)
+			F_vec_t = vector(Fx,Fy,Fz)
 
-		return field(F_vec_t,self.space,text_tag=self.text_tag+'*exp(j '+str(omega)+'*'+str(t)+')')
+			return field(F_vec_t,self.space,text_tag=self.text_tag+'*exp(j '+str(omega)+'*'+str(t)+')')
+		if self.field_type == 'scalar':
+			F_scalar_t = self.field*np.exp(1j*omega*t)
+			return field(F_scalar_t,self.space,text_tag=self.text_tag+'*exp(j '+str(omega)+'*'+str(t)+')')
 
 
 
