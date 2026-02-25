@@ -120,14 +120,14 @@ epsilon_r = 1.0  # Relative dielectric constant of the medium inside waveguide.
 
 """ Select mode number """
 m = 1 # mode number along 'a'
-n = 0 # mode number along 'b'
+n = 1 # mode number along 'b'
 
 h = np.sqrt( (m*np.pi/a)**2  + (n*np.pi/b)**2 )
 omega_c = h/(np.sqrt(epsilon_r*vf.EPSILON_0*vf.MU_0)) # omega_c is in radians/s
 
 omega = 1.5*omega_c
 
-E_field, H_field = TE_mode(m=m,n=n,omega=omega,space=space1,a=a,b=b)
+E_field, H_field = TM_mode(m=m,n=n,omega=omega,space=space1,a=a,b=b)
 
 Spin_H_comp = H_field^H_field.conjugate()
 
@@ -212,7 +212,7 @@ y_hat = vf.entities.vector(0,1,0)
 
 
 
-rho_y_b= -y_hat*E_vec_y_b
+rho_y_b = -y_hat*E_vec_y_b
 rho_y_0 = y_hat*E_vec_y_0
 
 J_y_b = -y_hat^H_vec_y_b
@@ -269,7 +269,9 @@ ax_wg = fig_2d.subplots(1,1)
 # E_field_line3, line_space3 = E_field.return_field_on_line(along='z',x0=a/2,y0=0.5*b)
 
 Spin_H_along_x,line_space1 = Spin_H.return_field_on_line(along='x',y0=b/2,z0=0.25*b)
+
 Spin_H_along_x_norm,line_space1 = Spin_H_norm.return_field_on_line(along='x',y0=b/2,z0=0.25*b)
+
 Spin_H_along_x_pt_wise_norm,line_space1 = Spin_H_pt_wise_norm.return_field_on_line(along='x',y0=b/2,z0=0.25*b)
 
 
