@@ -614,7 +614,7 @@ class field():
 		return ax, Fig
 		
 		
-	def plot_quiver3d(self,Fig=None,arrow_density = 0.7,text_tag=None,scale_mode='none',colormap='jet'):
+	def plot_quiver3d(self,Fig=None,arrow_density = 0.7,text_tag=None,scale_mode='none',cmap='jet'):
 		
 		if text_tag == None:
 			text_tag = self.text_tag
@@ -623,7 +623,7 @@ class field():
 			
 				
 		print('Plotting 3D quiver plot of: '+text_tag)
-		handle_s, Fig = plot.quiver3d(self.space,self.field,arrow_density=arrow_density,text_tag=text_tag,scale_mode=scale_mode,Fig=Fig,colormap=colormap)
+		handle_s, Fig = plot.quiver3d(self.space,self.field,arrow_density=arrow_density,text_tag=text_tag,scale_mode=scale_mode,Fig=Fig,cmap=cmap)
 		
 		return handle_s, Fig
 		

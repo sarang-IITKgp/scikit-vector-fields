@@ -8,7 +8,7 @@ from . import entities
 
 # import skvf as vf
 
-import mayavi.mlab as mlab
+
 
 # import sys as sys
 

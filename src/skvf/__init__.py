@@ -4,7 +4,7 @@ import skvf.plot
 import skvf.data
 
 
-__version__ = '1.0.3'
+__version__ = '1.0.5'
 
 
 EPSILON_0 = 8.8541878128e-12 # F/m

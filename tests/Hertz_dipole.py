@@ -3,7 +3,7 @@ import skvf as vf
 
 import copy as copy
 import matplotlib.pyplot as plt
-# import mayavi.mlab as mlab
+import mayavi.mlab as mlab
 
 import sys as sys
 
@@ -80,11 +80,11 @@ lambda0 = 2*np.pi/beta
 
 
 '''Create space'''
-x = np.linspace(-3*lambda0,3*lambda0,30)
-y = np.linspace(-3*lambda0,3*lambda0,30)
+x = np.linspace(-3*lambda0,3*lambda0,32)
+y = np.linspace(-3*lambda0,3*lambda0,34)
 # x = np.linspace(-1,1,50)
 # y = np.linspace(-1,1,40)
-z = np.linspace(-3*lambda0,3*lambda0,30)
+z = np.linspace(-3*lambda0,3*lambda0,36)
 
 
 space_xy = vf.entities.space(x=x,y=y)
@@ -126,7 +126,7 @@ Spin = H_field.conjugate()^H_field
 
 # Spin.plot_
 
-# E_field.real().plot_quiver3d()
+E_field.real().plot_quiver3d(arrow_density=0.3)
 # E_field.real().plot_volume_slice()
 
 Pv_field = E_field^H_field.conjugate()

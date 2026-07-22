@@ -1,11 +1,11 @@
 [build-system]
-requires = ["setuptools>=40.8.0","numpy","matplotlib","PyQt5","pandas","regex"]
+requires = ["setuptools>=40.8.0","numpy","matplotlib","pandas","regex"]
 build-backend = "setuptools.build_meta"
 
 
 [project]
 name = "scikit-vector-fields"
-version = "1.0.3"
+version = "1.0.5"
 authors = [
   { name="Sarang Pendharker", email="sarang@ece.iitkgp.ac.in" },
 ]
@@ -20,7 +20,7 @@ classifiers = [
     "Topic :: Scientific/Engineering"
 ]
 
-dependencies = ["numpy","matplotlib","mayavi","PyQt5","pandas","regex"]
+dependencies = ["numpy","matplotlib","pandas","regex"]
 
 [project.urls]
 "Homepage" = "https://github.com/sarang-IITKgp/scikit-vector-fields"

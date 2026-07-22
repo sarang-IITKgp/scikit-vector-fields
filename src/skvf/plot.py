@@ -2,7 +2,7 @@ import numpy as np
 """Plot commands"""
 import matplotlib.pyplot as plt
 
-import mayavi.mlab as mlab
+
 import sys as sys
 
 
@@ -296,125 +296,171 @@ def contourf(space,scalar,plane=None,loc=0,ax=None,Fig=None,color=True,cmap='jet
 	return ax, Fig
 	 
 	
-def quiver3d(space,vector,arrow_density = 0.7,text_tag=None,scale_mode='none',Fig=None,colormap='jet'):
+def quiver3d(space,vector,arrow_density = 0.5,text_tag=None,scale_mode=True,ax=None,Fig=None,color=True,cmap='jet',vmax=None,vmin=None,flag_colorbar=True):
 	
 	if text_tag == None:
 		text_tag = vector.text_tag
 	
-	if Fig == None:
-		Fig = mlab.figure('Mayavi plot: '+text_tag)
-	else:
-		mlab.figure(Fig)
+	if ax == None:
+		if Fig == None:
+			Fig = plt.figure(text_tag)
+		
+		ax = Fig.add_subplot(111,projection='3d')
+	
+	
+	# mask_points=int(max([pts_x,pts_y,pts_z])*(1.1-arrow_density))
+	
+	
 	
 	
 	if space.plane == 'x-y-z-3D':
 		pts_y,pts_x,pts_z = space.shape
 					
-		print('Plotting 3D quiver plot of '+text_tag+' using mayavi')
+		print('Plotting 3D quiver plot of '+text_tag+' Matplotlib')
 		
-		handle_s = mlab.quiver3d(space.x_grid,space.y_grid,space.z_grid, vector.x,vector.y,vector.z,scale_mode=scale_mode,mask_points=int(max([pts_x,pts_y,pts_z])*(1.1-arrow_density)),figure=Fig,colormap=colormap)
+		mask_points = int(1/arrow_density)
+		
+		
+		
+		x_grid_masked = space.x_grid[0:pts_y:mask_points,0:pts_x:mask_points,0:pts_z:mask_points]
+		y_grid_masked = space.y_grid[0:pts_y:mask_points,0:pts_x:mask_points,0:pts_z:mask_points]
+		z_grid_masked = space.z_grid[0:pts_y:mask_points,0:pts_x:mask_points,0:pts_z:mask_points]
+		
+		
+		vectror_x_grid_masked = vector.x[0:pts_y:mask_points,0:pts_x:mask_points,0:pts_z:mask_points]
+		vectror_y_grid_masked = vector.y[0:pts_y:mask_points,0:pts_x:mask_points,0:pts_z:mask_points]
+		vectror_z_grid_masked = vector.z[0:pts_y:mask_points,0:pts_x:mask_points,0:pts_z:mask_points]
+		
+		
+		
+		if color == True:
+			ax.quiver(x_grid_masked, y_grid_masked, z_grid_masked, vectror_x_grid_masked, vectror_y_grid_masked, vectror_y_grid_masked, length=0.1, normalize=True,cmap=cmap)	
+		else:
+			ax.quiver(x_grid_masked, y_grid_masked, z_grid_masked, vectror_x_grid_masked, vectror_y_grid_masked, vectror_y_grid_masked, length=0.1, normalize=True)	
+			# ax.quiver(var1,var2,data1,data2,pivot='mid')
+		# ax.set_aspect('equal')
+		# ax.set_xlabel(xlabel)
+		# ax.set_ylabel(ylabel)
+		
+		# ax.quiver(space.x_grid, space.y_grid, space.z_grid, vector.x, vector.y, vector.z, length=0.1, normalize=True)
+		# handle_s = mlab.quiver3d(space.x_grid,space.y_grid,space.z_grid, vector.x,vector.y,vector.z,scale_mode=scale_mode,mask_points=int(max([pts_x,pts_y,pts_z])*(1.1-arrow_density)),figure=Fig,colormap=colormap)
 
-		mlab.outline()
-		mlab.orientation_axes()
-		mlab.axes()
+		# mlab.outline()
+		# mlab.orientation_axes()
+		# mlab.axes()
 		
 	else:
 		sys.exit('only 3D vector fields can be plotted using this command.')
-	return handle_s, mlab.gcf()
+	# return handle_s, mlab.gcf()
+	return ax, Fig
 	
 def volume_slice_scalar(scalar,Fig=None,colormap='jet',text_tag='scalar field'):
 	
 	
-	if Fig ==  None:
-		Fig = mlab.figure('Mayavi volume slice plot:'+text_tag)
-	else:
-		mlab.figure(Fig)
+	# if Fig ==  None:
+		# Fig = mlab.figure('Mayavi volume slice plot:'+text_tag)
+	# else:
+		# mlab.figure(Fig)
 		
-	mlab.volume_slice(np.transpose(scalar,axes=[1,0,2]),figure=Fig,plane_orientation='x_axes')
-	mlab.volume_slice(np.transpose(scalar,axes=[1,0,2]),figure=Fig,plane_orientation='y_axes')
-	mlab.volume_slice(np.transpose(scalar,axes=[1,0,2]),figure=Fig,plane_orientation='z_axes')
+	# mlab.volume_slice(np.transpose(scalar,axes=[1,0,2]),figure=Fig,plane_orientation='x_axes')
+	# mlab.volume_slice(np.transpose(scalar,axes=[1,0,2]),figure=Fig,plane_orientation='y_axes')
+	# mlab.volume_slice(np.transpose(scalar,axes=[1,0,2]),figure=Fig,plane_orientation='z_axes')
 		
-	mlab.contour3d(np.transpose(scalar,axes=[1,0,2]),figure=Fig)
+	# mlab.contour3d(np.transpose(scalar,axes=[1,0,2]),figure=Fig)
 	
-	mlab.outline()
-	mlab.orientation_axes()
-	mlab.axes()
+	# mlab.outline()
+	# mlab.orientation_axes()
+	# mlab.axes()
 	
-	return mlab.gcf()
+	print('VERSION UPDATE WARNING: VOLUME SLICE 3D PLOT BASED ON MAYAVI LIBRARY AS BEEN DISCONTINUED. PLEASE USE ALTERNATE PLOT COMMAND.')
+	
+	return Fig
 
 	
 def volume_slice_vector(vector,Fig=None,colormap='jet',text_tag='vector field',arrow_density = 0.7,normal_plot=False):
 	
-	pts_y,pts_x,pts_z = vector.x.shape
+	# pts_y,pts_x,pts_z = vector.x.shape
 	
-	if Fig ==  None:
-		Fig = mlab.figure('Mayavi volume slice plot:'+text_tag)
-	else:
-		mlab.figure(Fig)
-	
-	
+	# if Fig ==  None:
+		# Fig = mlab.figure('Mayavi volume slice plot:'+text_tag)
+	# else:
+		# mlab.figure(Fig)
 	
 	
-	if normal_plot == True:
-		scalar_x_axes = vector.x #np.sqrt(vector.y**2 + vector.z**2)
-		scalar_y_axes = vector.y #np.sqrt(vector.x**2 + vector.z**2)
-		scalar_z_axes = vector.z #np.sqrt(vector.x**2 + vector.y**2)
-		print('Control here')
-	else:
+	
+	
+	# if normal_plot == True:
+		# scalar_x_axes = vector.x #np.sqrt(vector.y**2 + vector.z**2)
+		# scalar_y_axes = vector.y #np.sqrt(vector.x**2 + vector.z**2)
+		# scalar_z_axes = vector.z #np.sqrt(vector.x**2 + vector.y**2)
+		# print('Control here')
+	# else:
 		
-		scalar_x_axes = np.sqrt(vector.y**2 + vector.z**2)
-		scalar_y_axes = np.sqrt(vector.x**2 + vector.z**2)
-		scalar_z_axes = np.sqrt(vector.x**2 + vector.y**2)
+		# scalar_x_axes = np.sqrt(vector.y**2 + vector.z**2)
+		# scalar_y_axes = np.sqrt(vector.x**2 + vector.z**2)
+		# scalar_z_axes = np.sqrt(vector.x**2 + vector.y**2)
 	
-	mlab.volume_slice(np.transpose(scalar_x_axes,axes=[1,0,2]), plane_orientation='x_axes',colormap=colormap)
-	mlab.volume_slice(np.transpose(scalar_y_axes,axes=[1,0,2]), plane_orientation='y_axes',colormap=colormap)
-	mlab.volume_slice(np.transpose(scalar_z_axes,axes=[1,0,2]), plane_orientation='z_axes',colormap=colormap)
+	# mlab.volume_slice(np.transpose(scalar_x_axes,axes=[1,0,2]), plane_orientation='x_axes',colormap=colormap)
+	# mlab.volume_slice(np.transpose(scalar_y_axes,axes=[1,0,2]), plane_orientation='y_axes',colormap=colormap)
+	# mlab.volume_slice(np.transpose(scalar_z_axes,axes=[1,0,2]), plane_orientation='z_axes',colormap=colormap)
 
-	obj = mlab.quiver3d(np.transpose(vector.x,axes=[1,0,2]),np.transpose(vector.y,axes=[1,0,2]),np.transpose(vector.z,axes=[1,0,2]),scale_mode='none',mask_points=int(max([pts_x,pts_y,pts_z])*(1.1-arrow_density)))
+	# obj = mlab.quiver3d(np.transpose(vector.x,axes=[1,0,2]),np.transpose(vector.y,axes=[1,0,2]),np.transpose(vector.z,axes=[1,0,2]),scale_mode='none',mask_points=int(max([pts_x,pts_y,pts_z])*(1.1-arrow_density)))
 
-	mlab.outline()
-	mlab.orientation_axes()
-	mlab.axes()
+	# mlab.outline()
+	# mlab.orientation_axes()
+	# mlab.axes()
+	
+	
+	print('VERSION UPDATE WARNING: VOLUME SLICE 3D PLOT BASED ON MAYAVI LIBRARY AS BEEN DISCONTINUED. PLEASE USE ALTERNATE PLOT COMMAND.')
+	
 		
-	return mlab.gcf()
+	return Fig
 
 
 def contour3d(space,scalar,Fig=None,colormap='jet',text_tag='field',contours=None):
-	if Fig ==  None:
-		Fig = mlab.figure('Mayavi contour3d plot:'+text_tag)
-	else:
-		mlab.figure(Fig)
+	# if Fig ==  None:
+		# Fig = mlab.figure('Mayavi contour3d plot:'+text_tag)
+	# else:
+		# mlab.figure(Fig)
 
 
-	if contours == None:
-		mlab.contour3d(np.transpose(space.x_grid,axes=[1,0,2]),np.transpose(space.y_grid,axes=[1,0,2]),np.transpose(space.z_grid,axes=[1,0,2]),np.transpose(scalar,axes=[1,0,2]),figure=Fig)
-	else:	
-		mlab.contour3d(np.transpose(space.x_grid,axes=[1,0,2]),np.transpose(space.y_grid,axes=[1,0,2]),np.transpose(space.z_grid,axes=[1,0,2]),np.transpose(scalar,axes=[1,0,2]),figure=Fig,contours=contours)
-	mlab.outline()
-	mlab.orientation_axes()
-	mlab.axes()
+	# if contours == None:
+		# mlab.contour3d(np.transpose(space.x_grid,axes=[1,0,2]),np.transpose(space.y_grid,axes=[1,0,2]),np.transpose(space.z_grid,axes=[1,0,2]),np.transpose(scalar,axes=[1,0,2]),figure=Fig)
+	# else:	
+		# mlab.contour3d(np.transpose(space.x_grid,axes=[1,0,2]),np.transpose(space.y_grid,axes=[1,0,2]),np.transpose(space.z_grid,axes=[1,0,2]),np.transpose(scalar,axes=[1,0,2]),figure=Fig,contours=contours)
+	# mlab.outline()
+	# mlab.orientation_axes()
+	# mlab.axes()
 	
-	return mlab.gcf()
+	
+	print('VERSION UPDATE WARNING: Contour3D PLOT BASED ON MAYAVI LIBRARY AS BEEN DISCONTINUED. PLEASE USE ALTERNATE PLOT COMMAND.')
+	
+	return Fig
 	
 	
 
 def plot_mayavi_quiver(F_field,figure,scale_mode='none',arrow_density=0.7,colormap='jet',line_width=2):
 	
-	pts_y,pts_x,pts_z = F_field.space.x_grid.shape
+	# pts_y,pts_x,pts_z = F_field.space.x_grid.shape
 	
-	sq = mlab.quiver3d(F_field.space.x_grid,F_field.space.y_grid,F_field.space.z_grid, F_field.field.x,F_field.field.y,F_field.field.z,scale_mode=scale_mode,mask_points=int(max([pts_x,pts_y,pts_z])*(1.1-arrow_density)),figure=figure,colormap=colormap,line_width=line_width)
-	return sq
+	# sq = mlab.quiver3d(F_field.space.x_grid,F_field.space.y_grid,F_field.space.z_grid, F_field.field.x,F_field.field.y,F_field.field.z,scale_mode=scale_mode,mask_points=int(max([pts_x,pts_y,pts_z])*(1.1-arrow_density)),figure=figure,colormap=colormap,line_width=line_width)
+	
+	print('VERSION UPDATE WARNING: Quiver 3D PLOT BASED ON MAYAVI LIBRARY AS BEEN DISCONTINUED. PLEASE USE ALTERNATE PLOT COMMAND.')
+	
+	return figure
 
 
 def plot_mayavi_points3d(F_field,figure,scale_mode='scalar',point_density=1,colormap='jet',opacity=0.2,vmax=None,vmin=None):
-	if vmax == None:
-		vmax = np.max(F_field.real().field)
+	# if vmax == None:
+		# vmax = np.max(F_field.real().field)
 		
-	if vmin == None:
-		vmin = np.min(F_field.real().field)
+	# if vmin == None:
+		# vmin = np.min(F_field.real().field)
 		
-	pts_y,pts_x,pts_z = F_field.space.x_grid.shape
+	# pts_y,pts_x,pts_z = F_field.space.x_grid.shape
 	
-	s = mlab.points3d(F_field.space.x_grid,F_field.space.y_grid,F_field.space.z_grid, F_field.field,scale_mode=scale_mode,mask_points=int(max([pts_x,pts_y,pts_z])*(1.1-point_density)),figure=figure,colormap=colormap,vmax=vmax,vmin=vmin,opacity=opacity,scale_factor=0.05)
+	# s = mlab.points3d(F_field.space.x_grid,F_field.space.y_grid,F_field.space.z_grid, F_field.field,scale_mode=scale_mode,mask_points=int(max([pts_x,pts_y,pts_z])*(1.1-point_density)),figure=figure,colormap=colormap,vmax=vmax,vmin=vmin,opacity=opacity,scale_factor=0.05)
+	
+	print('VERSION UPDATE WARNING: 3D Point PLOT BASED ON MAYAVI LIBRARY AS BEEN DISCONTINUED. PLEASE USE ALTERNATE PLOT COMMAND.')
 	
 	return s
