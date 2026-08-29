@@ -69,7 +69,7 @@ This is a source object, which contains the vector or scalar magnitude of a sour
 
 ### 2) Module: Operations
 
-This module contain functions to compute (1) partial derivative of scalar quantity, (2) gradient of vector quantity, (3) curl of vector quantity, and (4) divergence of scalar quantity. 
+This module contain functions to compute (1) partial derivative of scalar quantity, (2) gradient of scalar quantity, (3) curl of vector quantity, and (4) divergence of vector quantity. 
 
 It takes 'field' and 'space' as input and returns vector of scalar. These function are called for computation as methods for _field_ objects. Although the recommended way of computing curl, divergence and gradient is using methods of the _field_ object, the functions in this module are also available to the user. 
 
